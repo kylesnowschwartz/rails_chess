@@ -2,14 +2,14 @@ class Board
   attr_reader :current_positions
 
   WIDTH = 8
-  RANK1 = (56..63)
-  RANK2 = (48..55)
-  RANK3 = (40..47)
-  RANK4 = (32..39)
-  RANK5 = (24..31)
-  RANK6 = (16..23)
-  RANK7 = (8..15)
-  RANK8 = (0..7)
+  RANK1 = (56..63), FILEA = (0..56).step(8)
+  RANK2 = (48..55), FILEB = (1..57).step(8)
+  RANK3 = (40..47), FILEC = (2..58).step(8)
+  RANK4 = (32..39), FILED = (3..59).step(8)
+  RANK5 = (24..31), FILEE = (4..60).step(8)
+  RANK6 = (16..23), FILEF = (5..61).step(8)
+  RANK7 = (8..15) , FILEG = (6..62).step(8)
+  RANK8 = (0..7)  , FILEH = (7..63).step(8)
 
   def initialize
     @current_positions = []
@@ -25,6 +25,8 @@ class Board
     else
       raise 'Not a legal move.'
     end
+
+    self
   end
 
   def inspect
@@ -74,24 +76,5 @@ class Board
     initially_blank_ranks.each do |rank|
       rank.each { |position| @current_positions[position] = nil }
     end
-  end
-
-  Coordinate = Struct.new(:row, :column)
-
-  def self.position_to_coordinate(position)
-    Coordinate.new(position_to_row(position), 
-                   position_to_column(position))
-  end
-
-  def self.coordinate_to_position(coordinate)
-    coordinate.row * WIDTH + coordinate.column
-  end
-
-  def self.position_to_row(position)
-    position / WIDTH
-  end
-
-  def self.position_to_column(position)
-    position % WIDTH
   end
 end
