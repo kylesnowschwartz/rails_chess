@@ -50,8 +50,8 @@ class Board
   end
 
   def populate_pawns
-    RANK2.each { |cell_id| @current_positions[cell_id] = Pawn.new("white") }
-    RANK7.each { |cell_id| @current_positions[cell_id] = Pawn.new("black") }
+    RANK2.each { |position| @current_positions[position] = Pawn.new("white") }
+    RANK7.each { |position| @current_positions[position] = Pawn.new("black") }
   end
 
   def populate_other_pieces(color)
@@ -60,9 +60,9 @@ class Board
 
     case color
     when "white"
-      RANK1.each { |cell_id| @current_positions[cell_id] = other_pieces.shift}
+      RANK1.each { |position| @current_positions[position] = other_pieces.shift}
     when "black"
-      RANK8.each { |cell_id| @current_positions[cell_id] = other_pieces.shift}
+      RANK8.each { |position| @current_positions[position] = other_pieces.shift}
     else
       raise "Sorry, white and black are the only valid options. I know, das racist"
     end
@@ -72,26 +72,26 @@ class Board
     initially_blank_ranks = [RANK3, RANK4, RANK5, RANK6]
 
     initially_blank_ranks.each do |rank|
-      rank.each { |cell_id| @current_positions[cell_id] = nil }
+      rank.each { |position| @current_positions[position] = nil }
     end
   end
 
   Coordinate = Struct.new(:row, :column)
 
-  def self.cell_id_to_coordinate(cell_id)
-    Coordinate.new(cell_id_to_row(cell_id), 
-                   cell_id_to_column(cell_id))
+  def self.position_to_coordinate(position)
+    Coordinate.new(position_to_row(position), 
+                   position_to_column(position))
   end
 
-  def self.coordinate_to_cell_id(coordinate)
+  def self.coordinate_to_position(coordinate)
     coordinate.row * WIDTH + coordinate.column
   end
 
-  def self.cell_id_to_row(cell_id)
-    cell_id / WIDTH
+  def self.position_to_row(position)
+    position / WIDTH
   end
 
-  def self.cell_id_to_column(cell_id)
-    cell_id % WIDTH
+  def self.position_to_column(position)
+    position % WIDTH
   end
 end

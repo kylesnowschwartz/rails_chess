@@ -1,7 +1,2 @@
-class Rook
-  attr_reader :color
-
-  def initialize(color)
-    @color = color
-  end
+class Rook < Piece
 end
