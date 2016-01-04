@@ -1,15 +1,11 @@
 class Pawn < Piece
   def legal_moves(board, position)
-    potential_moves(board, position).select { |position| within_board?(position) }
-  end
-
-  def potential_moves(board, position)
     moves = []
 
-    two_ahead = two_rows_ahead(position)
-    one_ahead = one_row_ahead(position)
-    attack_left = attack_left(position)
-    attack_right = attack_right(position)
+    one_ahead = Square.one_row_ahead(position, self)
+    two_ahead = Square.two_rows_ahead(position, self)
+    attack_left = Square.one_diagonal_forward_left(position, self)
+    attack_right = Square.one_diagonal_forward_right(position, self)
 
     moves << one_ahead unless board.current_positions[one_ahead].present?
     
@@ -18,9 +14,13 @@ class Pawn < Piece
         moves << two_ahead unless board.current_positions[two_ahead].present?
       end
 
-      moves << attack_right if board.current_positions[attack_right].present? && !on_file_h?(position)
-      
-      moves << attack_left if board.current_positions[attack_left].present? && !on_file_a?(position)
+      if board.current_positions[attack_right].present? && board.current_positions[attack_right].black?
+        moves << attack_right if !on_file_h?(position)
+      end
+
+      if board.current_positions[attack_left].present? && board.current_positions[attack_left].black?
+        moves << attack_left if !on_file_a?(position)
+      end
     end
 
     if black?
@@ -28,27 +28,19 @@ class Pawn < Piece
         moves << two_ahead unless board.current_positions[two_ahead].present?
       end
 
-      moves << attack_right if board.current_positions[attack_right].present? && !on_file_a?(position)
-      
-      moves << attack_left if board.current_positions[attack_left].present? && !on_file_h?(position)
+      if board.current_positions[attack_right].present? && board.current_positions[attack_right].white?
+        moves << attack_right if !on_file_a?(position)
+      end
+        
+      if board.current_positions[attack_left].present? && board.current_positions[attack_left].white?
+        moves << attack_left if !on_file_h?(position)
+      end
     end
 
-    moves
+    moves_within_board(moves)
   end
 
-  def two_rows_ahead(position)
-    white? ? position - 16 : position + 16
-  end
-
-  def one_row_ahead(position)
-    white? ? position - 8 : position + 8
-  end
-
-  def attack_left(position)
-    white? ? position - 9 : position + 9
-  end
-  
-  def attack_right(position)
-    white? ? position - 7 : position + 7
+  def moves_within_board(moves)
+    moves.select { |position| within_board?(position) }
   end
 end

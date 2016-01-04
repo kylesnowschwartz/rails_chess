@@ -12,27 +12,19 @@ class Piece
   end
 
   def on_file_a?(position)
-    coordinate = Square.position_to_coordinate(position)
-
-    coordinate.column == 0
+    Board::FILEA.include?(position)
   end
 
   def on_file_h?(position)
-    coordinate = Square.position_to_coordinate(position)
-
-    coordinate.column == 7
+    Board::FILEH.include?(position)
   end
 
   def on_rank_1?(position)
-    coordinate = Square.position_to_coordinate(position)
-
-    coordinate.row == 7
+    Board::RANK1.include?(position)
   end
 
   def on_rank_8?(position)
-    coordinate = Square.position_to_coordinate(position)
-
-    coordinate.row == 0
+    Board::RANK8.include?(position)
   end
 
   def white?

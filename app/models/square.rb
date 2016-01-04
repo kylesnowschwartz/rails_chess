@@ -32,39 +32,47 @@ class Square
     Board.const_get("FILE" + column_index_to_file[position % Board::WIDTH])
   end
 
-  def self.diagonals(position)
-    # Matrix[[0, 1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22, 23], [24, 25, 26, 27, 28, 29, 30, 31], [32, 33, 34, 35, 36, 37, 38, 39], [40, 41, 42, 43, 44, 45, 46, 47], [48, 49, 50, 51, 52, 53, 54, 55], [56, 57, 58, 59, 60, 61, 62, 63]]
-    # width = Board::WIDTH
-    # diagonals = []
-    # top_left_corner = 0
-    # top_right_corner = 7
-    # bottom_left_corner = 56
-    # bottom_right_corner = 63
-    
-    # (0..7).each do |column|
-    #   diagonals << (column..bottom_right_corner).step(width + 1)
-    #   bottom_right_corner -=8
-    # end
+  def self.two_rows_ahead(position, piece)
+    piece.white? ? position - 16 : position + 16
+  end
 
-    # (56..63).each do |column|
-    #   diagonals << (top_right_corner..column).step(width - 1)
-    #   top_right_corner +=8
-    # end
+  def self.one_row_ahead(position, piece)
+    piece.white? ? position - 8 : position + 8
+  end
 
-    # (0..56).step(8).each do |row|
-    #   diagonals << (row..bottom_right_corner).step(width - 1)
-    #   bottom_right_corner -= 1
-    # end
+  def self.one_diagonal_forward_left(position, piece)
+    piece.white? ? position - 9 : position + 9
+  end
 
-    # (7..63).step(8).each do |row|
-    #   diagonals << (row..bottom_left_corner).step(width - 1)
-    #   bottom_left_corner += 1
-    # end
+  def self.one_diagonal_forward_right(position, piece)
+    piece.white? ? position - 7 : position + 7
+  end
 
-    # diagonals.select{ |range| range.include?(position) }
-
+  def self.position_diagonals(position)
+    diagonals
+      .select { |diagonal| diagonal.include?(position) }
+      .each { |diagonal| diagonal.delete(position) }
   end
 
   def self.knight_moves(position)
+  end
+
+  def self.diagonals
+    offset_range = ((-Board::WIDTH + 1)..Board::WIDTH)
+
+    [Board::POSITIONS, Board::POSITIONS.map(&:reverse)]
+      .inject([]) do |all_diags, positions|
+        offset_range.each do |offset_index|
+          diagonal = []
+
+          (Board::WIDTH).times do |row_index|
+            col_index = offset_index + row_index
+            diagonal << positions[row_index][col_index] if col_index >= 0
+          end
+
+          all_diags << diagonal.compact if diagonal.compact.count > 1
+        end
+        all_diags
+      end
   end
 end
