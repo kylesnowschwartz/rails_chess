@@ -1,6 +1,21 @@
 class Board
   attr_reader :current_positions
 
+  PIECES_TO_UNICODE = { 
+    "white King"   => "\u2654",
+    "white Queen"  => "\u2655",
+    "white Rook"   => "\u2656",
+    "white Bishop" => "\u2657",
+    "white Knight" => "\u2658",
+    "white Pawn"   => "\u2659",
+    "black King"   => "\u265A",
+    "black Queen"  => "\u265B",
+    "black Rook"   => "\u265C",
+    "black Bishop" => "\u265D",
+    "black Knight" => "\u265E",
+    "black Pawn"   => "\u265F"
+  }
+
   WIDTH = 8
 
   RANK1 = (56..63)
@@ -43,15 +58,21 @@ class Board
 
   def inspect
     @current_positions
-      .map { |piece| piece.nil_piece? ? "".center(8) : "#{piece.class}".center(8).colorize(piece.color.to_sym) }
+      .map { |piece| piece.nil_piece? ? "".center(3) : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3) }
       .in_groups_of(8)
       .map.with_index do |row, index|
-        index.even? ? row.map.with_index { |piece, index| index.even? ? piece.on_light_white : piece.on_light_black } : row.map.with_index { |piece, index| index.odd? ? piece.on_light_white : piece.on_light_black }
+        if index.even? 
+          row.map.with_index { |piece, index| index.even? ? piece.on_light_white : piece.on_black }
+        else 
+          row.map.with_index { |piece, index| index.odd? ? piece.on_light_white : piece.on_black }
+        end
       end
+      .zip( (1..8).to_a.reverse.map { |number| number.to_s.center(3) } )
+      .unshift(("A".."H").to_a.map { |letter| letter.center(3) } )
       .unshift(["\n"])
       .map{ |row| row.join }
       .push(["\n"])
-      .join("\n" + " "*71 + "\n")
+      .join("\n")
   end
 
   private
