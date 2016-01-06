@@ -3,6 +3,7 @@ class Piece
 
   def initialize(color)
     @color = color
+    raise "This piece exhibits racial diversity. Kill it, and choose Black or White as God intended." unless @color == "white" || @color == "black" || @color == "nil"
   end
 
   def within_board?(position)
@@ -33,5 +34,17 @@ class Piece
 
   def black?
     @color == 'black'
+  end
+
+  def same_color?(other)
+    @color == other.color
+  end
+
+  def moves_within_board(moves)
+    moves.select { |position| within_board?(position) }
+  end
+
+  def nil_piece?
+    self.is_a?(NilPiece)
   end
 end

@@ -1,8 +1,4 @@
 class Square
-
-  # TODO a square class (or position?) has some smart concepts like 
-  #      all the diagonals, all the ones ahead and behind it, etc.
-
   Coordinate = Struct.new(:row, :column)
 
   def self.position_to_coordinate(position)
@@ -11,6 +7,7 @@ class Square
   end
 
   def self.coordinate_to_position(coordinate)
+    coordinate = Coordinate.new(coordinate[0], coordinate[1]) if coordinate.is_a?(Array)
     coordinate.row * Board::WIDTH + coordinate.column
   end
 
@@ -23,7 +20,7 @@ class Square
   end
 
   def self.rank(position)
-    Board.const_get("RANK" + "#{(position / Board::WIDTH) + 1}")
+    Board.const_get("RANK" + "#{((position / Board::WIDTH) - 7).abs + 1}")
   end
 
   def self.file(position)
@@ -57,22 +54,26 @@ class Square
   def self.knight_moves(position)
   end
 
+  def self.pieces_in_file(position)
+    
+  end
+
   def self.diagonals
     offset_range = ((-Board::WIDTH + 1)..Board::WIDTH)
 
     [Board::POSITIONS, Board::POSITIONS.map(&:reverse)]
-      .inject([]) do |all_diags, positions|
-        offset_range.each do |offset_index|
+      .inject([]) do |all_diagonals, positions|
+        offset_range.each do |offset|
           diagonal = []
 
           (Board::WIDTH).times do |row_index|
-            col_index = offset_index + row_index
+            col_index = offset + row_index
             diagonal << positions[row_index][col_index] if col_index >= 0
           end
 
-          all_diags << diagonal.compact if diagonal.compact.count > 1
+          all_diagonals << diagonal.compact if diagonal.compact.count > 1
         end
-        all_diags
+        all_diagonals
       end
   end
 end

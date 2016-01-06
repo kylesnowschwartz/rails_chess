@@ -33,7 +33,7 @@ class Board
 
     if legal_moves.include?(to_square)
       @current_positions[to_square] = @current_positions[from_square]
-      @current_positions[from_square] = nil
+      @current_positions[from_square] = NilPiece.new
     else
       raise 'Not a legal move.'
     end
@@ -42,16 +42,16 @@ class Board
   end
 
   def inspect
-    @current_positions.
-      map { |piece| piece.nil? ? "".center(8) : "#{piece.class}".center(8).colorize(piece.color.to_sym) }.
-      in_groups_of(8).
-      map.with_index do |row, index|
+    @current_positions
+      .map { |piece| piece.nil_piece? ? "".center(8) : "#{piece.class}".center(8).colorize(piece.color.to_sym) }
+      .in_groups_of(8)
+      .map.with_index do |row, index|
         index.even? ? row.map.with_index { |piece, index| index.even? ? piece.on_light_white : piece.on_light_black } : row.map.with_index { |piece, index| index.odd? ? piece.on_light_white : piece.on_light_black }
-      end.
-      unshift(["\n"]).
-      map{ |row| row.join }.
-      push(["\n"]).
-      join("\n" + " "*71 + "\n")
+      end
+      .unshift(["\n"])
+      .map{ |row| row.join }
+      .push(["\n"])
+      .join("\n" + " "*71 + "\n")
   end
 
   private
@@ -86,7 +86,7 @@ class Board
     initially_blank_ranks = [RANK3, RANK4, RANK5, RANK6]
 
     initially_blank_ranks.each do |rank|
-      rank.each { |position| @current_positions[position] = nil }
+      rank.each { |position| @current_positions[position] = NilPiece.new }
     end
   end
 end
