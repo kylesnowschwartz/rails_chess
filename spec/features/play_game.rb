@@ -11,6 +11,7 @@ RSpec.describe "Play game", type: :feature do
     board.move_piece(30, 22)
     board.move_piece(12, 28)
     board.move_piece(22, 15)
-    expect(board.current_positions[15]).to be_a(Pawn)
+    expect(board.current_positions[15]).to be_a Pawn
+    expect(board.current_positions[15].color).to eq 'white'
   end
 end
