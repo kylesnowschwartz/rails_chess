@@ -3,13 +3,6 @@ class Piece
 
   def initialize(color)
     @color = color
-    raise "This piece exhibits racial diversity. Kill it, and choose Black or White as God intended." unless @color == "white" || @color == "black" || @color == "nil"
-  end
-
-  def within_board?(position)
-    coordinate = Square.position_to_coordinate(position)
-
-    coordinate.row < Board::WIDTH && coordinate.column < Board::WIDTH
   end
 
   def on_file_a?(position)
@@ -29,19 +22,21 @@ class Piece
   end
 
   def white?
-    @color == 'white'
+    color == 'white'
   end
 
   def black?
-    @color == 'black'
+    color == 'black'
   end
 
   def same_color?(other)
-    @color == other.color
+    return false if nil_piece?
+    color == other.color
   end
 
-  def moves_within_board(moves)
-    moves.select { |position| within_board?(position) }
+  def opposite_color?(other)
+    return false if nil_piece?
+    white? ? other.black? : other.white?
   end
 
   def nil_piece?

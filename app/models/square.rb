@@ -45,17 +45,44 @@ class Square
     piece.white? ? position - 7 : position + 7
   end
 
-  def self.position_diagonals(position)
-    diagonals
-      .select { |diagonal| diagonal.include?(position) }
-      .each { |diagonal| diagonal.delete(position) }
-  end
-
   def self.knight_moves(position)
   end
 
-  def self.pieces_in_file(position)
+  def self.positions_within_board(positions)
+    positions.select { |position| within_board?(position) }
+  end
+
+  def self.within_board?(position)
+    row = position_to_coordinate(position).row
+    col = position_to_coordinate(position).column
+
+    row < Board::WIDTH && col < Board::WIDTH
+  end
+
+  def self.neighbors(position)
+    row = position_to_coordinate(position).row
+    col = position_to_coordinate(position).column
     
+    [
+      [row    , col - 1], 
+      [row    , col + 1], 
+      [row - 1, col    ], 
+      [row + 1, col    ], 
+      [row - 1, col - 1], 
+      [row + 1, col + 1],
+      [row - 1, col + 1], 
+      [row + 1, col - 1] 
+    ].select { |c| valid_coordinate?(c) }
+     .map { |c| coordinate_to_position(c) }
+  end
+
+  def self.valid_coordinate?((row, col))
+    (0...Board::WIDTH).include?(row) &&
+    (0...Board::WIDTH).include?(col)
+  end
+
+  def self.position_diagonals(position)
+    diagonals.select { |diagonal| diagonal.include?(position) }
   end
 
   def self.diagonals

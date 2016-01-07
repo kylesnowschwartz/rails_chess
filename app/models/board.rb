@@ -75,6 +75,10 @@ class Board
       .join("\n")
   end
 
+  def piece(position)
+    current_positions[position]
+  end
+
   private
 
   def set_initial_positions
