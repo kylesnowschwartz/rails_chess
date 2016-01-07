@@ -49,3 +49,12 @@ end
 # MovePiece.new(b, 31, 23).call
 # MovePiece.new(b, 23, 15).call
 # MovePiece.new(b, 15, 7).call
+  
+ # ValidateKingMove 
+ board = Board.new
+ king = board.piece(4)
+ MovePiece.new(board, 11, 27).call
+ MovePiece.new(board, 54, 46).call
+ MovePiece.new(board, 61, 47).call
+ MovePiece.new(board, 13, 21).call
+ ValidateKingMove.new(king, board, 4, 11).call

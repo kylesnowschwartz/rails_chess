@@ -12,7 +12,7 @@ class ValidateBishopMove
     legal_moves.include?(to)
   end
 
-  private
+  # private
 
   def legal_moves
     all_diagonal_pieces
@@ -22,9 +22,9 @@ class ValidateBishopMove
   end
 
   def all_diagonal_pieces
-    moves       = bishop.potential_moves(from)
-    left_to_right = pieces_on_diagonal(moves[0])
-    right_to_left = pieces_on_diagonal(moves[1])
+    moves         = bishop.potential_moves(from)
+    left_to_right = pieces_on_diagonal(moves[:left_to_right])
+    right_to_left = pieces_on_diagonal(moves[:right_to_left])
     
     enclosed_inclusive_subset(left_to_right) + enclosed_inclusive_subset(right_to_left)
   end
@@ -41,7 +41,7 @@ class ValidateBishopMove
     Board::WIDTH.times do |offset|
       offset += 1
       ahead = pieces[starting_position + offset]
-      behind = pieces[starting_position - offset]
+      behind = pieces[starting_position - offset] if starting_position - offset >= 0
       
       if  ahead_subset.empty? || ahead_subset.last.try(:nil_piece?)
         ahead_subset << ahead if [ahead].any?

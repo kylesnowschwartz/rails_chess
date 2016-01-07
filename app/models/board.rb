@@ -1,5 +1,5 @@
 class Board
-  attr_reader :current_positions
+  attr_accessor :current_positions
 
   PIECES_TO_UNICODE = { 
     "white King"   => "\u2654",

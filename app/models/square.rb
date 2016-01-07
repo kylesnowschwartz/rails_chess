@@ -46,6 +46,20 @@ class Square
   end
 
   def self.knight_moves(position)
+    row = position_to_coordinate(position).row
+    col = position_to_coordinate(position).column
+    
+    [
+      [row - 2, col + 1], 
+      [row + 2, col + 1], 
+      [row - 2, col - 1], 
+      [row + 2, col - 1], 
+      [row - 1, col - 2], 
+      [row - 1, col + 2], 
+      [row + 1, col - 2], 
+      [row + 1, col + 2], 
+    ].select { |c| valid_coordinate?(c) }
+     .map { |c| coordinate_to_position(c) }
   end
 
   def self.positions_within_board(positions)

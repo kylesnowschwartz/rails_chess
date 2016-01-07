@@ -1,8 +1,8 @@
-class ValidateRookMove
-  attr_reader :rook, :board, :to, :from
+class ValidateQueenMove
+  attr_reader :queen, :board, :to, :from
 
-  def initialize(rook, board, from, to)
-    @rook  = rook
+  def initialize(queen, board, from, to)
+    @queen  = queen
     @board = board
     @to    = to
     @from  = from
@@ -12,17 +12,29 @@ class ValidateRookMove
     legal_moves.include?(to)
   end
 
-  private
+  # private
 
   def legal_moves
-    rank_and_file_pieces
-      .reject { |piece| rook.same_color?(piece) }
+    all_diagonal_pieces + rank_and_file_pieces
+      .reject { |piece| queen.same_color?(piece) }
       .map { |piece| board.current_positions.find_index(piece) }
       .uniq
   end
 
+  def all_diagonal_pieces
+    moves         = queen.potential_moves(from)
+    left_to_right = pieces_on_diagonal(moves[:left_to_right])
+    right_to_left = pieces_on_diagonal(moves[:right_to_left])
+    
+    enclosed_inclusive_subset(left_to_right) + enclosed_inclusive_subset(right_to_left)
+  end
+
+  def pieces_on_diagonal(diagonal)
+    board.current_positions.values_at(*diagonal)
+  end
+
   def rank_and_file_pieces
-    moves       = rook.potential_moves(from)
+    moves       = queen.potential_moves(from)
     rank_pieces = pieces_on_rank_or_file(moves[:rank_array])
     file_pieces = pieces_on_rank_or_file(moves[:file_array])
     
@@ -34,14 +46,14 @@ class ValidateRookMove
   end
 
   def enclosed_inclusive_subset(pieces)
-    starting_position = pieces.find_index(rook)
+    starting_position = pieces.find_index(queen)
     ahead_subset = []
     behind_subset = []
 
     Board::WIDTH.times do |offset|
       offset += 1
-      behind = pieces[starting_position - offset]
-      ahead = pieces[starting_position + offset] if starting_position - offset >= 0
+      ahead = pieces[starting_position + offset]
+      behind = pieces[starting_position - offset] if starting_position - offset >= 0
       
       if  ahead_subset.empty? || ahead_subset.last.try(:nil_piece?)
         ahead_subset << ahead if [ahead].any?

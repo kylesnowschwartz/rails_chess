@@ -8,6 +8,7 @@ class Pawn < Piece
 
     moves << one_ahead
   
+  # TODO enpassant
     if white?
       moves << two_ahead if Square.rank(position) == Board::RANK2
       moves << attack_right unless on_file_h?(position)
@@ -20,6 +21,4 @@ class Pawn < Piece
 
     Square.positions_within_board(moves)
   end
-
-  # TODO enpassant
 end
