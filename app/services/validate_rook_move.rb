@@ -17,7 +17,7 @@ class ValidateRookMove
   def legal_moves
     rank_and_file_pieces
       .reject { |piece| rook.same_color?(piece) }
-      .map { |piece| board.current_positions.find_index(piece) }
+      .map { |piece| board.position(piece) }
       .uniq
   end
 

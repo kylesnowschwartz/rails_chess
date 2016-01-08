@@ -17,7 +17,7 @@ class ValidateQueenMove
   def legal_moves
     all_diagonal_pieces + rank_and_file_pieces
       .reject { |piece| queen.same_color?(piece) }
-      .map { |piece| board.current_positions.find_index(piece) }
+      .map { |piece| board.position(piece) }
       .uniq
   end
 

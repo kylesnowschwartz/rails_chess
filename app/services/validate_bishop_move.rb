@@ -17,7 +17,7 @@ class ValidateBishopMove
   def legal_moves
     all_diagonal_pieces
       .reject { |piece| bishop.same_color?(piece) }
-      .map { |piece| board.current_positions.find_index(piece) }
+      .map { |piece| board.position(piece) }
       .uniq
   end
 

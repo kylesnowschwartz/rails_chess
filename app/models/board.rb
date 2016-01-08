@@ -43,19 +43,6 @@ class Board
     set_initial_positions
   end
 
-  def move_piece(from_square, to_square)
-    legal_moves = @current_positions[from_square].legal_moves(self, from_square)
-
-    if legal_moves.include?(to_square)
-      @current_positions[to_square] = @current_positions[from_square]
-      @current_positions[from_square] = NilPiece.new
-    else
-      raise 'Not a legal move.'
-    end
-
-    self
-  end
-
   def inspect
     @current_positions
       .map { |piece| piece.nil_piece? ? "".center(3) : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3) }
@@ -77,6 +64,10 @@ class Board
 
   def piece(position)
     current_positions[position]
+  end
+
+  def position(piece)
+    current_positions.find_index(piece)
   end
 
   private

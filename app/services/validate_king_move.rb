@@ -26,7 +26,7 @@ class ValidateKingMove
     return true if kings_meeting?
 
     opposite_color_pieces_without_king.map do |piece|
-      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.current_positions.find_index(piece), to).call
+      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), to).call
     end.any?
   end
 
@@ -54,7 +54,7 @@ class ValidateKingMove
   end
 
   def kings_meeting?
-    king_index = @duped_board.current_positions.find_index(opposite_color_king)
+    king_index = @duped_board.position(opposite_color_king)
     opposite_color_king.potential_moves(king_index).include?(to)
   end
 end

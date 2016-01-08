@@ -51,10 +51,38 @@ end
 # MovePiece.new(b, 15, 7).call
   
  # ValidateKingMove 
- board = Board.new
- king = board.piece(4)
- MovePiece.new(board, 11, 27).call
- MovePiece.new(board, 54, 46).call
- MovePiece.new(board, 61, 47).call
- MovePiece.new(board, 13, 21).call
- ValidateKingMove.new(king, board, 4, 11).call
+ # board = Board.new
+ # king = board.piece(4)
+ # MovePiece.new(board, 11, 27).call
+ # MovePiece.new(board, 54, 46).call
+ # MovePiece.new(board, 61, 47).call
+ # MovePiece.new(board, 13, 21).call
+ # ValidateKingMove.new(king, board, 4, 11).call
+
+  board = Board.new
+  MovePiece.new(board, 52, 36).call
+  MovePiece.new(board, 12, 28).call
+  MovePiece.new(board, 62, 45).call
+  MovePiece.new(board, 1, 18).call
+  MovePiece.new(board, 51, 35).call
+  MovePiece.new(board, 28, 35).call
+  MovePiece.new(board, 45, 35).call
+  MovePiece.new(board, 18, 35).call
+  MovePiece.new(board, 59, 35).call
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
