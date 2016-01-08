@@ -1,6 +1,8 @@
 class Board
   attr_accessor :current_positions
 
+  # TODO extract set up to a service
+  # TODO extract presentation to a presenter
   PIECES_TO_UNICODE = { 
     "white King"   => "\u2654",
     "white Queen"  => "\u2655",
@@ -45,7 +47,7 @@ class Board
 
   def inspect
     @current_positions
-      .map { |piece| piece.nil_piece? ? "".center(3) : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3) }
+      .map { |piece| piece.nil_piece? ? "   " : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3) }
       .in_groups_of(8)
       .map.with_index do |row, index|
         if index.even? 

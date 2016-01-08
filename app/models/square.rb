@@ -1,4 +1,5 @@
 class Square
+  # TODO make this less bloated, break it up, do SOMETHING
   Coordinate = Struct.new(:row, :column)
 
   def self.position_to_coordinate(position)
