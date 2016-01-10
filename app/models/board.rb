@@ -59,7 +59,7 @@ class Board
       .zip( (1..8).to_a.reverse.map { |number| number.to_s.center(3) } )
       .unshift(("A".."H").to_a.map { |letter| letter.center(3) } )
       .unshift(["\n"])
-      .map{ |row| row.join }
+      .map { |row| row.join }
       .push(["\n"])
       .join("\n")
   end

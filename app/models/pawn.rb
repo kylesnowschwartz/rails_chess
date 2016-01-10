@@ -27,7 +27,7 @@ class Pawn < Piece
     Square.positions_within_board(moves)
   end
 
-  def one_head
+  def one_ahead
     Square.one_row_ahead(@position, self)
   end
 
