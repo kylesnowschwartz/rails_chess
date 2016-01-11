@@ -64,6 +64,8 @@ class Square
   end
 
   def self.positions_within_board(positions)
+    return [] if positions.empty?
+    
     positions.select { |position| within_board?(position) }
   end
 

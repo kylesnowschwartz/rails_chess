@@ -2,9 +2,10 @@ class Pawn < Piece
   def potential_moves(position)
     @position = position
 
-    moves = []
+    attacks = []
+    moves_forward = []
 
-    moves << one_ahead
+    moves_forward << one_ahead
   
   # TODO enpassant
   # the capturing pawn must be on its fifth rank;
@@ -14,17 +15,21 @@ class Pawn < Piece
     # after the opposing pawn makes the double-step move; 
     # otherwise the right to capture it en passant is lost.
     
+  # TODO what if there's a piece on the third rank blocking the pawn from moving forward?
     if white?
-      moves << two_ahead if Square.rank(position) == Board::RANK2
-      moves << attack_right unless on_file_h?(position)
-      moves << attack_left unless on_file_a?(position)
+      moves_forward << two_ahead if Square.rank(position) == Board::RANK2
+      attacks << attack_right unless on_file_h?(position)
+      attacks << attack_left unless on_file_a?(position)
     else
-      moves << two_ahead if Square.rank(position) == Board::RANK7
-      moves << attack_right unless on_file_a?(position)
-      moves << attack_left unless on_file_h?(position)
+      moves_forward << two_ahead if Square.rank(position) == Board::RANK7
+      attacks << attack_right unless on_file_a?(position)
+      attacks << attack_left unless on_file_h?(position)
     end
 
-    Square.positions_within_board(moves)
+    { 
+      attacks: Square.positions_within_board(attacks),
+      moves_forward: Square.positions_within_board(moves_forward)
+    }
   end
 
   def one_ahead

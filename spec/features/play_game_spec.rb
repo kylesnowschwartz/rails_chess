@@ -97,6 +97,14 @@ move f7 f6
 MovePiece.new(@board, 8, 16).my_color_king_in_check? == true
 MovePiece.new(@board, 48, 40).opposite_color_king_in_check? == true
 
+#pawn cannot attack blank square
+start_chess
+move e2 e4
+move d7 d5
+move e4 e5
+move f7 f6
+move g1 f3
+move d5 e4
 
 
 

@@ -1,26 +1,25 @@
 class ValidatePawnMove < ValidatePieceMove
   def legal_moves
-    @pawn.potential_moves(from).select do |position|
-      valid_attack?(position) || valid_move?(position)
-    end
+    valid_attacks + valid_moves_forward
   end
 
   # private
 
-  def valid_attack?(position)
-    board.piece(position).present? &&
-      board.piece(position).opposite_color?(@pawn) &&
-      Square.position_diagonals(from).flatten.include?(to)
+  def valid_attacks
+    return [] if @pawn.potential_moves(from)[:attacks].empty?
+
+    @pawn.potential_moves(from)[:attacks].select do |position|
+      board.piece(position).present? &&
+        board.piece(position).opposite_color?(@pawn) &&
+        Square.position_diagonals(from).flatten.include?(to)
+    end
   end
 
-  def valid_move?(position)
-    board.piece(position).nil_piece?
+  def valid_moves_forward
+    return [] if @pawn.potential_moves(from)[:moves_forward].empty?
+
+    @pawn.potential_moves(from)[:moves_forward].select do |position|
+      board.piece(position).nil_piece?
+    end
   end
 end
-
-move e2 e4
-move d7 d5
-move e4 e5
-move f7 f6
-move g1 f3
-move d5 e4
