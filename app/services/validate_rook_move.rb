@@ -1,16 +1,12 @@
 class ValidateRookMove < ValidatePieceMove
-  def call
-    legal_moves.include?(to)
-  end
-
-  # private
-
   def legal_moves
     rank_and_file_pieces
       .reject { |piece| piece.same_color?(@rook) }
       .map { |piece| board.position(piece) }
       .uniq
   end
+
+  # private
 
   def rank_and_file_pieces
     moves       = @rook.potential_moves(from)

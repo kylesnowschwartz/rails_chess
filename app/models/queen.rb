@@ -11,11 +11,11 @@ class Queen < Piece
   end
 
   def left_to_right
-    Square.position_diagonals(@position)[0]
+    Square.position_diagonals(@position)[0] || []
   end
 
   def right_to_left
-    Square.position_diagonals(@position)[1]
+    Square.position_diagonals(@position)[1] || []
   end
 
   def rank_array

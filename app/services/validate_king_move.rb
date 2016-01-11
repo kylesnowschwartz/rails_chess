@@ -1,25 +1,40 @@
 class ValidateKingMove < ValidatePieceMove
   def call
-    valid_move? && @king.potential_moves(from).include?(to)
+    legal_moves.include?(to)
+  end
+
+  def legal_moves
+    @king.potential_moves(from).reject do |position|
+      board.piece(position).same_color?(@king) || moves_into_check?(position)
+    end
   end
 
   # private
+  
+  def moves_into_check?(position)
+    @duped_board = duplicate_board
+    move_king_in_duplicated_board(position)
 
-  def valid_move?
-    (piece_on_desired_square.nil_piece? || piece_on_desired_square.opposite_color?(@king)) && !moves_through_check?
+    return true if kings_meeting?
+
+    opposite_color_pieces_moves_attack_desired_king_move?(position)
   end
 
-  def moves_through_check?
-    opposite_color_positions.map do |position_list| 
-      position_list.is_a?(Array) ? position_list : position_list.values 
-    end.flatten.uniq.include?(to)
+  def opposite_color_pieces_moves_attack_desired_king_move?(position)
+    opposite_color_pieces_without_king.map do |opposite_piece|
+      "Validate#{opposite_piece.class}Move".constantize.new(
+        opposite_piece, @duped_board, @duped_board.position(opposite_piece), position
+      ).call
+    end.any?
   end
 
-  def opposite_color_pieces
-    board.current_positions.select { |piece| piece.opposite_color?(@king) }
+  def move_king_in_duplicated_board(position)
+    @duped_board.current_positions[position] = @duped_board.current_positions[from]
+    @duped_board.current_positions[from] = NilPiece.new
   end
 
-  def opposite_color_positions
-    opposite_color_pieces.map { |piece| piece.potential_moves(board.position(piece)) }
+  def kings_meeting?
+    king_index = @duped_board.current_positions.find_index(opposite_color_king)
+    opposite_color_king.potential_moves(king_index).include?(to)
   end
 end

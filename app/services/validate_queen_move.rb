@@ -1,16 +1,12 @@
 class ValidateQueenMove < ValidatePieceMove
-  def call
-    legal_moves.include?(to)
-  end
-
-  # private
-
   def legal_moves
-    all_diagonal_pieces + rank_and_file_pieces
+    (all_diagonal_pieces + rank_and_file_pieces)
       .reject { |piece| piece.same_color?(@queen) }
       .map { |piece| board.position(piece) }
       .uniq
   end
+
+  # private
 
   def all_diagonal_pieces
     moves         = @queen.potential_moves(from)

@@ -40,6 +40,7 @@ RSpec.describe "Play game", type: :feature do
   end
 end
 
+# simple game
 # MovePiece.new(b, 54, 38).call
 # MovePiece.new(b, 15, 31).call
 # MovePiece.new(b, 38, 31).call
@@ -51,24 +52,28 @@ end
 # MovePiece.new(b, 15, 7).call
   
 # ValidateKingMove 
-# board = Board.new
-# king = board.piece(4)
-# MovePiece.new(board, 11, 27).call
-# MovePiece.new(board, 54, 46).call
-# MovePiece.new(board, 61, 47).call
-# MovePiece.new(board, 13, 21).call
-# ValidateKingMove.new(king, board, 4, 11).call
+start_chess
+move e2 e4
+move e1 e2
+move e2 e3
+move e3 f4
+move d7 d5
+move e8 d7
+move d7 e6
+move f4 e5
 
-# board = Board.new
-# MovePiece.new(board, 52, 36).call
-# MovePiece.new(board, 12, 28).call
-# MovePiece.new(board, 62, 45).call
-# MovePiece.new(board, 1, 18).call
-# MovePiece.new(board, 51, 35).call
-# MovePiece.new(board, 28, 35).call
-# MovePiece.new(board, 45, 35).call
-# MovePiece.new(board, 18, 35).call
-# MovePiece.new(board, 59, 35).call
+# reveal check
+start_chess
+move e2 e4
+move e1 e2
+move e2 e3
+move e3 f4
+move d7 d5
+move e8 d7
+move d7 e6
+move f4 g4
+move e6 d6
+move a2 a3 # raises not a legal move
 
 #promote Pawn
 # start_chess
@@ -81,7 +86,16 @@ end
 # move h5 h6
 # move h6 h7
 # move h7 h8
+# move h8 g8
 
+#put myself in check
+start_chess
+move e2 e4
+move e7 e5
+move d1 h5
+move f7 f6
+MovePiece.new(@board, 8, 16).my_color_king_in_check? == true
+MovePiece.new(@board, 48, 40).opposite_color_king_in_check? == true
 
 
 

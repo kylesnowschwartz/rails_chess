@@ -1,11 +1,9 @@
 class ValidateKnightMove < ValidatePieceMove
-  def call
-    valid_move? && @knight.potential_moves(from).include?(to)
-  end
+  def legal_moves
+    @knight.potential_moves(from).select do |position|
+      piece = board.piece(position)
 
-  # private
-
-  def valid_move?
-    piece_on_desired_square.nil_piece? || piece_on_desired_square.opposite_color?(@knight)
+      piece.opposite_color?(@knight) || piece.nil_piece?
+    end
   end
 end

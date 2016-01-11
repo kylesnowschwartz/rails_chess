@@ -12,6 +12,10 @@ class MovePiece
     raise "You can't move from an empty square" if piece.nil_piece?
 
     if move_valid?
+      if checked_opposing_player?
+        puts 'Check.'
+      end
+
       board.current_positions[to] = board.current_positions[from]
       board.current_positions[from] = NilPiece.new
 
@@ -25,10 +29,14 @@ class MovePiece
     board
   end
 
-  private
-
+  # private
+    
   def move_valid?
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).call
+  end
+
+  def checked_opposing_player?
+    "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_check?
   end
 
   def promote_pawn
