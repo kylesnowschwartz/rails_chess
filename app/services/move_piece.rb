@@ -9,6 +9,8 @@ class MovePiece
   end
 
   def call
+    raise "You can't move from an empty square" if piece.nil_piece?
+
     if move_valid?
       board.current_positions[to] = board.current_positions[from]
       board.current_positions[from] = NilPiece.new

@@ -22,8 +22,8 @@ class ValidatePieceMove
 
     Board::WIDTH.times do |offset|
       offset += 1
-      behind  = pieces[starting_position - offset]
-      ahead   = pieces[starting_position + offset] if starting_position - offset >= 0
+      behind  = pieces[starting_position - offset] if starting_position - offset >= 0
+      ahead   = pieces[starting_position + offset] 
       
       if  ahead_subset.empty? || ahead_subset.last.try(:nil_piece?)
         ahead_subset << ahead if [ahead].any?

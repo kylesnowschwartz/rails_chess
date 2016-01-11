@@ -59,17 +59,28 @@ end
 # MovePiece.new(board, 13, 21).call
 # ValidateKingMove.new(king, board, 4, 11).call
 
-board = Board.new
-MovePiece.new(board, 52, 36).call
-MovePiece.new(board, 12, 28).call
-MovePiece.new(board, 62, 45).call
-MovePiece.new(board, 1, 18).call
-MovePiece.new(board, 51, 35).call
-MovePiece.new(board, 28, 35).call
-MovePiece.new(board, 45, 35).call
-MovePiece.new(board, 18, 35).call
-MovePiece.new(board, 59, 35).call
+# board = Board.new
+# MovePiece.new(board, 52, 36).call
+# MovePiece.new(board, 12, 28).call
+# MovePiece.new(board, 62, 45).call
+# MovePiece.new(board, 1, 18).call
+# MovePiece.new(board, 51, 35).call
+# MovePiece.new(board, 28, 35).call
+# MovePiece.new(board, 45, 35).call
+# MovePiece.new(board, 18, 35).call
+# MovePiece.new(board, 59, 35).call
 
+#promote Pawn
+# start_chess
+# move g2 g4
+# move h7 h5
+# move g4 h5
+# move h8 h6
+# move e2 e4
+# move h6 a6
+# move h5 h6
+# move h6 h7
+# move h7 h8
 
 
 

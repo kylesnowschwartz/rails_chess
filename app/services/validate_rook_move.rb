@@ -3,7 +3,7 @@ class ValidateRookMove < ValidatePieceMove
     legal_moves.include?(to)
   end
 
-  private
+  # private
 
   def legal_moves
     rank_and_file_pieces
