@@ -12,14 +12,11 @@ class MovePiece
     raise "You can't move from an empty square" if piece.nil_piece?
 
     if move_valid?
-      if checked_opposing_player?
-        puts 'Check.'
-      end
-
-      board.current_positions[to] = board.current_positions[from]
-      board.current_positions[from] = NilPiece.new
-
-      if piece.is_a?(Pawn) && (Square.rank(to) == Board::RANK1 || Square.rank(to) == Board::RANK8)
+      place_piece
+      
+      puts 'Check.' if checked_opposing_player?
+      
+      if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
         promote_pawn
       end
     else
@@ -30,6 +27,11 @@ class MovePiece
   end
 
   # private
+
+  def place_piece
+    board.current_positions[to] = board.current_positions[from]
+    board.current_positions[from] = NilPiece.new
+  end
     
   def move_valid?
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).call

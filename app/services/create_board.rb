@@ -13,19 +13,25 @@ class CreateBoard
   end
 
   def populate_pawns
-    Board::RANK2.each { |position| @board.current_positions[position] = Pawn.new("white") }
-    Board::RANK7.each { |position| @board.current_positions[position] = Pawn.new("black") }
+    Board::RANK2
+      .each { |position| @board.current_positions[position] = Pawn.new("white") }
+    Board::RANK7
+      .each { |position| @board.current_positions[position] = Pawn.new("black") }
   end
 
   def populate_other_pieces(color)
-    other_pieces = [Rook.new(color), Knight.new(color), Bishop.new(color), Queen.new(color), 
-                    King.new(color), Bishop.new(color), Knight.new(color), Rook.new(color)]
+    other_pieces = [
+      Rook.new(color), Knight.new(color), Bishop.new(color), Queen.new(color), 
+      King.new(color), Bishop.new(color), Knight.new(color), Rook.new(color)
+    ]
 
     case color
     when "white"
-      Board::RANK1.each { |position| @board.current_positions[position] = other_pieces.shift}
+      Board::RANK1
+        .each { |position| @board.current_positions[position] = other_pieces.shift }
     when "black"
-      Board::RANK8.each { |position| @board.current_positions[position] = other_pieces.shift}
+      Board::RANK8
+        .each { |position| @board.current_positions[position] = other_pieces.shift }
     else
       raise "Sorry, white and black are the only valid options. I know, das racist"
     end

@@ -1,7 +1,9 @@
 class Rook < Piece
   def potential_moves(position)
-    {rank_array: rank_array(position),
-     file_array: file_array(position)}
+    {
+      rank_array: rank_array(position),
+      file_array: file_array(position)
+    }
   end
 
   private

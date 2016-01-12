@@ -38,6 +38,8 @@ class ValidatePieceMove
     @duped_board.current_positions[from] = NilPiece.new
   end
 
+  # TODO perhaps the board knows about the black and white pieces?
+
   def my_color_king_in_check?
     kings_position = @duped_board.position(same_color_king)
 
@@ -47,7 +49,7 @@ class ValidatePieceMove
   def opposite_color_king_in_check?
     @duped_board = duplicate_board
     move_piece_in_duplicated_board
-    
+
     kings_position = @duped_board.position(opposite_color_king)
 
     same_color_pieces_legal_moves.include?(kings_position)
