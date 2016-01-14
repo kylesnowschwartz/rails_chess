@@ -13,14 +13,14 @@ class MovePiece
 
     if move_valid?
       place_piece
-      
+
       puts 'Check.' if checked_opposing_player?
       
       if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
         promote_pawn
       end
     else
-      raise 'Not a legal move.'
+      raise "Not a legal move for #{piece.class}"
     end
 
     board

@@ -15,17 +15,15 @@ class ValidateKingMove < ValidatePieceMove
     @duped_board = duplicate_board
     move_king_in_duplicated_board(position)
 
-    return true if kings_meeting?
-
-    opposite_color_pieces_attack_desired_position?(position)
+    kings_meeting? || opposite_color_pieces_attack_desired_king_move?(position)
   end
 
-  def opposite_color_pieces_attack_desired_position?(position)
-    opposite_color_pieces_without_king.map do |opposite_piece|
+  def opposite_color_pieces_attack_desired_king_move?(position)
+    opposite_color_pieces_without_king.any? do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(
         opposite_piece, @duped_board, @duped_board.position(opposite_piece), position
       ).call
-    end.any?
+    end
   end
 
   def move_king_in_duplicated_board(position)

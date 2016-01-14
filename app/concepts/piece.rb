@@ -36,7 +36,7 @@ class Piece
 
   def opposite_color?(other)
     return false if nil_piece?
-    white? ? other.black? : other.white?
+    !same_color?(other)
   end
 
   def nil_piece?

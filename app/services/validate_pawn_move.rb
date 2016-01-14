@@ -8,9 +8,9 @@ class ValidatePawnMove < ValidatePieceMove
   def valid_attacks
     return [] if @pawn.potential_moves(from)[:attacks].empty?
 
-    @pawn.potential_moves(from)[:attacks].select do |position|
-      board.piece(position).present? &&
-        board.piece(position).opposite_color?(@pawn) &&
+    @pawn.potential_moves(from)[:attacks].select do |attack|
+      board.piece(attack).present? &&
+        board.piece(attack).opposite_color?(@pawn) &&
         Square.position_diagonals(from).flatten.include?(to)
     end
   end
@@ -18,8 +18,9 @@ class ValidatePawnMove < ValidatePieceMove
   def valid_moves_forward
     return [] if @pawn.potential_moves(from)[:moves_forward].empty?
 
-    @pawn.potential_moves(from)[:moves_forward].select do |position|
-      board.piece(position).nil_piece?
+    @pawn.potential_moves(from)[:moves_forward].select do |move_forward|
+      board.piece(move_forward).nil_piece? &&
+      board.piece(Square.one_row_ahead(from, @pawn)).nil_piece?
     end
   end
 end

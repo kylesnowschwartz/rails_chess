@@ -1,6 +1,26 @@
+require 'set'
+
 class Square
   # TODO make this less bloated, break it up, do SOMETHING
-  Coordinate = Struct.new(:row, :column)
+  Coordinate = Struct.new(:row, :column) do
+    def diagonal_to?(coordinate)
+      (row - coordinate.row).abs == (column - coordinate.column).abs
+    end
+
+    def diagonal_direction(coordinate)
+      # in order to seperate the diagonals by direction, 
+      # we can group by the signs (same or different) of a coordinate pair
+      if (row - coordinate.row <=> 0) == (column - coordinate.column <=> 0)
+        :nw_to_se
+      else
+        :ne_to_sw
+      end
+    end
+
+    def to_position
+      Square.coordinate_to_position(self)
+    end
+  end
 
   def self.position_to_coordinate(position)
     Coordinate.new(position_to_row(position), 
@@ -21,15 +41,16 @@ class Square
   end
 
   def self.rank(position)
-    Board.const_get("RANK" + "#{((position / Board::WIDTH) - 7).abs + 1}")
+    Board.const_get("RANK#{Board::WIDTH - position_to_row(position)}")
   end
 
   def self.file(position)
     column_index_to_file = (0..7).zip('A'..'H').to_h
 
-    Board.const_get("FILE" + column_index_to_file[position % Board::WIDTH])
+    Board.const_get("FILE" + column_index_to_file[position_to_column(position)])
   end
 
+  # TODO direction multiplier
   def self.two_rows_ahead(position, piece)
     piece.white? ? position - 16 : position + 16
   end
@@ -98,26 +119,13 @@ class Square
     (0...Board::WIDTH).include?(col)
   end
 
-  def self.position_diagonals(position)
-    diagonals.select { |diagonal| diagonal.include?(position) }
-  end
+  def self.position_diagonals(current_position)
+    current_coordinate = position_to_coordinate(current_position)
+    board_coordinates = Board::POSITIONS.flatten.map { |position| position_to_coordinate(position) }
 
-  def self.diagonals
-    offset_range = ((-Board::WIDTH + 1)..Board::WIDTH)
-
-    [Board::POSITIONS, Board::POSITIONS.map(&:reverse)]
-      .inject([]) do |all_diagonals, positions|
-        offset_range.each do |offset|
-          diagonal = []
-
-          (Board::WIDTH).times do |row_index|
-            col_index = offset + row_index
-            diagonal << positions[row_index][col_index] if col_index >= 0
-          end
-
-          all_diagonals << diagonal.compact if diagonal.compact.count > 1
-        end
-        all_diagonals
-      end
+    board_coordinates
+      .select { |coordinate| coordinate.diagonal_to?(current_coordinate) }
+      .group_by { |coordinate| coordinate.diagonal_direction(current_coordinate) }
+      .map { |_, coordinates| Set.new(coordinates.map(&:to_position) + [current_position]).sort }
   end
 end

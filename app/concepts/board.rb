@@ -1,6 +1,6 @@
 class Board
   attr_accessor :current_positions
-
+  # TODO worth doing with meta programming?
   WIDTH = 8
 
   RANK1 = (56..63)
@@ -12,14 +12,14 @@ class Board
   RANK7 = (8..15) 
   RANK8 = (0..7)
 
-  FILEA = (0..56).step(8)
-  FILEB = (1..57).step(8)
-  FILEC = (2..58).step(8)
-  FILED = (3..59).step(8)
-  FILEE = (4..60).step(8)
-  FILEF = (5..61).step(8)
-  FILEG = (6..62).step(8)
-  FILEH = (7..63).step(8)
+  FILEA = (0..56).step(WIDTH)
+  FILEB = (1..57).step(WIDTH)
+  FILEC = (2..58).step(WIDTH)
+  FILED = (3..59).step(WIDTH)
+  FILEE = (4..60).step(WIDTH)
+  FILEF = (5..61).step(WIDTH)
+  FILEG = (6..62).step(WIDTH)
+  FILEH = (7..63).step(WIDTH)
 
   POSITIONS = [RANK8, RANK7, RANK6, RANK5, RANK4, RANK3, RANK2, RANK1].map(&:to_a)
 

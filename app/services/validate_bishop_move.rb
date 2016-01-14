@@ -1,4 +1,3 @@
-
 class ValidateBishopMove < ValidatePieceMove
   def legal_moves
     all_diagonal_pieces
