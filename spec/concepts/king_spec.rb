@@ -195,16 +195,16 @@ RSpec.describe King, type: :concept do
                       ♔  1
     BOARD
 
-    p move a7 h7
-    expect(board_string.strip).to eq board.inspect.strip
     expect(STDOUT).to receive(:puts).with("Check.")
+    move a7 h7
+    expect(board_string.strip).to eq board.inspect.strip
    end
 
    xit "reports when a king is mated" do
-    board = empty_board
-    board.current_positions[63] = King.new('white')
-    board.current_positions[6] = Rook.new('black')
-    board.current_positions[8] = Rook.new('black')
+    @board = empty_board
+    @board.current_positions[63] = King.new('white')
+    @board.current_positions[6] = Rook.new('black')
+    @board.current_positions[8] = Rook.new('black')
 
          board_string = <<-BOARD
  A  B  C  D  E  F  G  H 

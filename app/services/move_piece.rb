@@ -12,9 +12,9 @@ class MovePiece
     raise "You can't move from an empty square" if piece.nil_piece?
 
     if move_valid?
-      place_piece
-
       puts 'Check.' if checked_opposing_player?
+      
+      place_piece
       
       if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
         promote_pawn
