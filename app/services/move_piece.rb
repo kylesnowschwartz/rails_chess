@@ -12,13 +12,11 @@ class MovePiece
     raise "You can't move from an empty square" if piece.nil_piece?
 
     if move_valid?
-      puts 'Check.' if checked_opposing_player?
+      report_king_status
       
       place_piece
       
-      if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
-        promote_pawn
-      end
+      promote_pawn
     else
       raise "Not a legal move for #{piece.class}"
     end
@@ -27,6 +25,15 @@ class MovePiece
   end
 
   # private
+
+  def report_king_status
+    if opposing_player_in_checkmate?
+      puts 'Checkmate.'
+    elsif checked_opposing_player?
+      puts 'Check.'
+    else
+    end
+  end
 
   def place_piece
     board.current_positions[to] = board.current_positions[from]
@@ -41,8 +48,16 @@ class MovePiece
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_check?
   end
 
+  def opposing_player_in_checkmate?
+    "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_checkmate?
+  end
+
   def promote_pawn
-    board.current_positions[to] = request_pawn_promotion_choice.constantize.new(piece.color)
+    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
+      chosen_piece = request_pawn_promotion_choice
+
+      board.current_positions[to] = chosen_piece.constantize.new(piece.color)
+    end
   end
 
   def request_pawn_promotion_choice

@@ -106,7 +106,7 @@ RSpec.describe Pawn, type: :concept do
     expect(board_string.strip).to eq board.inspect.strip
   end
 
-  it "raises an error trying attack an occupied square" do
+  it "raises an error trying attack an empty square" do
 
   board_string = <<-BOARD
  A  B  C  D  E  F  G  H 

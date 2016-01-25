@@ -55,14 +55,30 @@ class ValidatePieceMove
     same_color_pieces_legal_moves.include?(kings_position)
   end
 
+  def opposite_color_king_in_checkmate?
+    @duped_board = duplicate_board
+    move_piece_in_duplicated_board
+
+    kings_position = @duped_board.position(opposite_color_king)
+
+    same_color_pieces_legal_moves.include?(kings_position) &&
+    opposite_color_pieces_legal_moves.empty?
+  end
+
   def opposite_color_pieces_legal_moves
-    opposite_color_pieces_without_king.map do |opposite_piece|
+    # TODO figure out why I initially did this without the king
+    # opposite_color_pieces_without_king.map do |opposite_piece| ...
+
+    opposite_color_pieces.map do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
     end.flatten.uniq
   end
 
   def same_color_pieces_legal_moves
-    same_color_pieces_without_king.map do |opposite_piece|
+    # TODO figure out why I initially did this without the king
+    # same_color_pieces_without_king.map do |opposite_piece| ...
+
+    same_color_pieces.map do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
     end.flatten.uniq
   end

@@ -181,6 +181,7 @@ RSpec.describe King, type: :concept do
    it "reports when a king is checked" do
     board = empty_board
     board.current_positions[63] = King.new('white')
+    board.current_positions[56] = King.new('black')
     board.current_positions[8] = Rook.new('black')
 
          board_string = <<-BOARD
@@ -192,7 +193,7 @@ RSpec.describe King, type: :concept do
                          4 
                          3 
                          2 
-                      ♔  1
+ ♚                    ♔  1
     BOARD
 
     expect(STDOUT).to receive(:puts).with("Check.")
@@ -200,11 +201,12 @@ RSpec.describe King, type: :concept do
     expect(board_string.strip).to eq board.inspect.strip
    end
 
-   xit "reports when a king is mated" do
-    @board = empty_board
-    @board.current_positions[63] = King.new('white')
-    @board.current_positions[6] = Rook.new('black')
-    @board.current_positions[8] = Rook.new('black')
+   it "reports when a king is mated" do
+    board = empty_board
+    board.current_positions[63] = King.new('white')
+    board.current_positions[56] = King.new('black')
+    board.current_positions[6] = Rook.new('black')
+    board.current_positions[8] = Rook.new('black')
 
          board_string = <<-BOARD
  A  B  C  D  E  F  G  H 
@@ -215,9 +217,10 @@ RSpec.describe King, type: :concept do
                          4 
                          3 
                          2 
-                      ♔  1
+ ♚                    ♔  1
     BOARD
 
+    expect(STDOUT).to receive(:puts).with("Checkmate.")
     move a7 h7
     expect(board_string.strip).to eq board.inspect.strip
    end
