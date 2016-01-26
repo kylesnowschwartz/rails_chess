@@ -2,6 +2,7 @@ require 'set'
 
 class Square
   # TODO make this less bloated, break it up, do SOMETHING
+  # TODO just intialize with a position goddamnit
   Coordinate = Struct.new(:row, :column) do
     def diagonal_to?(coordinate)
       (row - coordinate.row).abs == (column - coordinate.column).abs

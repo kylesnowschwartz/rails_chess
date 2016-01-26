@@ -35,9 +35,29 @@ class MovePiece
     end
   end
 
+  def castling?
+    @piece.is_a?(King) && @piece.potential_moves(from)[:castles].include?(to)
+  end
+
   def place_piece
     board.current_positions[to] = board.current_positions[from]
     board.current_positions[from] = NilPiece.new
+
+    if castling?
+      king_side_castle_to = 62
+      king_side_castle_rook_from = 63
+      king_side_castle_rook_to = 61
+
+      if to == king_side_castle_to
+        board.current_positions[king_side_castle_rook_to] = board.current_positions[king_side_castle_rook_from]
+        board.current_positions[king_side_castle_rook_from] = NilPiece.new
+      end
+
+      if to == 58
+        board.current_positions[59] = board.current_positions[56]
+        board.current_positions[56] = NilPiece.new
+      end
+    end
   end
     
   def move_valid?

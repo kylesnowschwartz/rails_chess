@@ -107,27 +107,31 @@ class ValidatePieceMove
     same_color_pieces.select { |piece| piece.class == King }[0]
   end
 
+  def pieces_on_rank_or_file(rank_or_file)
+    board.current_positions.values_at(*rank_or_file)
+  end
+
   def enclosed_inclusive_subset(pieces)
     return [] if pieces.empty?
 
-    starting_position = pieces.find_index(piece_in_question)
-    ahead_subset      = []
-    behind_subset     = []
+    starting_position  = pieces.find_index(piece_in_question)
+    partitioned_pieces = pieces.partition.with_index { |piece, index| index <= starting_position}
+    behind_subset      = partitioned_pieces[0]
+    ahead_subset       = partitioned_pieces[1]
+    piece_in_question  = behind_subset.pop
 
-    Board::WIDTH.times do |offset|
-      offset += 1
-      behind  = pieces[starting_position - offset] if starting_position - offset >= 0
-      ahead   = pieces[starting_position + offset]
-      
-      if  ahead_subset.empty? || ahead_subset.last.try(:nil_piece?)
-        ahead_subset << ahead if [ahead].any?
-      end
-
-      if  behind_subset.empty? || behind_subset.last.try(:nil_piece?)
-        behind_subset << behind if [behind].any?
-      end
+    left_bound = []
+    behind_subset.reverse_each do |piece|
+      left_bound << piece
+      break unless piece.nil_piece?
     end
 
-    behind_subset + ahead_subset
+    right_bound = []
+    ahead_subset.each do |piece|
+      right_bound << piece
+      break unless piece.nil_piece?
+    end
+
+    left_bound.reverse + right_bound
   end
 end

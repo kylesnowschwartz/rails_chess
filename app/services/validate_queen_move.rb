@@ -27,8 +27,4 @@ class ValidateQueenMove < ValidatePieceMove
   def pieces_on_diagonal(diagonal)
     board.current_positions.values_at(*diagonal)
   end
-
-  def pieces_on_rank_or_file(rank_or_file)
-    board.current_positions.values_at(*rank_or_file)
-  end
 end

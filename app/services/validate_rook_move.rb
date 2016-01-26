@@ -15,8 +15,4 @@ class ValidateRookMove < ValidatePieceMove
     
     enclosed_inclusive_subset(rank_pieces) + enclosed_inclusive_subset(file_pieces)
   end
-
-  def pieces_on_rank_or_file(rank_or_file)
-    board.current_positions.values_at(*rank_or_file)
-  end
 end
