@@ -63,7 +63,11 @@
 # move g1 f3
 # move d5 e4
 
-#famous games
+#fool's checkmate
+# move f2 f3
+# move e4 e5
+# move g2 g4
+# move d8 h4
 
 
 

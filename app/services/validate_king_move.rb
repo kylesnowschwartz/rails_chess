@@ -14,42 +14,39 @@ class ValidateKingMove < ValidatePieceMove
 
   # private
 
-  # TODO make a test for each condition and extract this to a service query
+  # TODO extract this to a service query
   def can_castle?(position)
-    # byebug
     queen_side_position = @king.potential_moves(from)[:castles][0]
     king_side_position = @king.potential_moves(from)[:castles][1]
-
-    if @king.white? 
-      return false unless from == 60 
-    else 
-      return false unless from == 4 
-    end
-
     rank = Square.rank(from)
-
     pieces = pieces_on_rank_or_file(rank)
-    subset = enclosed_inclusive_subset(pieces)
+    subset_of_pieces_that_bound_king = enclosed_inclusive_subset(pieces)
+    left_bound_piece = subset_of_pieces_that_bound_king[0]
+    right_bound_piece = subset_of_pieces_that_bound_king[-1]
 
-    front_piece = subset[0]
-    back_piece = subset[-1]
-
-    return false unless front_piece.is_a?(Rook) || back_piece.is_a?(Rook)
-
-    if @king.white?
-      return @board.position(front_piece) == 56 || @board.position(back_piece) == 63
+    if to == queen_side_position
+      original_king_position == from &&
+      left_bound_piece.is_a?(Rook) && 
+      original_rook_positions[0] == @board.position(left_bound_piece) &&
+      !my_color_king_in_check? &&
+      position == to
+    elsif to == king_side_position
+      original_king_position == from &&
+      right_bound_piece.is_a?(Rook) && 
+      original_rook_positions[1] == @board.position(right_bound_piece) &&
+      !my_color_king_in_check? &&
+      position == to
     else
-      return @board.position(front_piece) == 0 || @board.position(back_piece) == 7
+      false
     end
+  end
 
-    return false if piece_in_question_pinned?
+  def original_king_position
+    piece_in_question.white? ? 60 : 4
+  end
 
-    # The king and the chosen rook are on the player's first rank
-    # Neither the king nor the chosen rook has previously moved.
-    # There are no pieces between the king and the chosen rook.
-    # The king is not currently in check.
-    # The king does not pass through a square that is attacked by an enemy piece
-    # The king does not end up in check. (True of any legal move.)
+  def original_rook_positions
+    piece_in_question.white? ? [56, 63] : [0, 7]
   end
   
   def moves_into_check?(position)

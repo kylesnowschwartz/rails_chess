@@ -24,7 +24,26 @@ class ValidatePieceMove
     @duped_board = duplicate_board
     move_piece_in_duplicated_board
 
-    my_color_king_in_check?
+    kings_position = @duped_board.position(same_color_king)
+
+    opposite_color_pieces_legal_moves.include?(kings_position)
+  end
+
+  def my_color_king_in_check?
+    @duped_board = duplicate_board
+
+    kings_position = @duped_board.position(same_color_king)
+
+    opposite_color_pieces_legal_moves.include?(kings_position)
+  end
+
+  def opposite_color_king_in_check?
+    @duped_board = duplicate_board
+    move_piece_in_duplicated_board
+
+    kings_position = @duped_board.position(opposite_color_king)
+
+    same_color_pieces_legal_moves.include?(kings_position)
   end
 
   def duplicate_board
@@ -40,21 +59,6 @@ class ValidatePieceMove
 
   # TODO perhaps the board knows about the black and white pieces?
 
-  def my_color_king_in_check?
-    kings_position = @duped_board.position(same_color_king)
-
-    opposite_color_pieces_legal_moves.include?(kings_position)
-  end
-
-  def opposite_color_king_in_check?
-    @duped_board = duplicate_board
-    move_piece_in_duplicated_board
-
-    kings_position = @duped_board.position(opposite_color_king)
-
-    same_color_pieces_legal_moves.include?(kings_position)
-  end
-
   def opposite_color_king_in_checkmate?
     @duped_board = duplicate_board
     move_piece_in_duplicated_board
@@ -66,19 +70,13 @@ class ValidatePieceMove
   end
 
   def opposite_color_pieces_legal_moves
-    # TODO figure out why I initially did this without the king
-    # opposite_color_pieces_without_king.map do |opposite_piece| ...
-
     opposite_color_pieces.map do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
     end.flatten.uniq
   end
 
   def same_color_pieces_legal_moves
-    # TODO figure out why I initially did this without the king
-    # same_color_pieces_without_king.map do |opposite_piece| ...
-
-    same_color_pieces.map do |opposite_piece|
+    same_color_pieces_without_king.map do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
     end.flatten.uniq
   end

@@ -250,10 +250,10 @@ RSpec.describe King, type: :concept do
 
   it "white king can castle queen side" do
     board = empty_board
-    board.current_positions[60] = King.new('white')
-    board.current_positions[56] = Rook.new('white')
-    board.current_positions[4] = King.new('black')
-    board.current_positions[8] = Rook.new('black')
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[56] = Rook.new('white')
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[8] = Rook.new('black')
 
     board_string = <<-BOARD
  A  B  C  D  E  F  G  H 
@@ -295,10 +295,152 @@ RSpec.describe King, type: :concept do
     expect(board_string.strip).to eq board.inspect.strip 
   end
 
-  # The king and the chosen rook are on the player's first rank
-    # Neither the king nor the chosen rook has previously moved.
-    # There are no pieces between the king and the chosen rook.
-    # The king is not currently in check.
-    # The king does not pass through a square that is attacked by an enemy piece
-    # The king does not end up in check. (True of any legal move.)
+  it "cannot castle when there is a piece in the way" do
+    board = empty_board
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[56] = Rook.new('white')
+    @board.current_positions[59] = Rook.new('white')
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[8] = Rook.new('black')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+ ♜                       7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖        ♖  ♔           1
+    BOARD
+
+    move = MovePiece.new(@board, 60, 58)
+    expect{ move.call }.to raise_error(RuntimeError)
+    expect(board_string.strip).to eq board.inspect.strip 
+  end
+
+  it "cannot castle when in check" do
+    board = empty_board
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[56] = Rook.new('white')
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[12] = Rook.new('black')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+             ♜           7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖           ♔           1
+    BOARD
+
+    move = MovePiece.new(@board, 60, 58)
+    expect{ move.call }.to raise_error(RuntimeError)
+    expect(board_string.strip).to eq board.inspect.strip 
+  end
+
+  it "cannot castle when moving into check" do
+       board = empty_board
+       @board.current_positions[60] = King.new('white')
+       @board.current_positions[56] = Rook.new('white')
+       @board.current_positions[4] = King.new('black')
+       @board.current_positions[10] = Rook.new('black')
+
+       board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+       ♜                 7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖           ♔           1
+       BOARD
+
+       move = MovePiece.new(@board, 60, 58)
+       expect{ move.call }.to raise_error(RuntimeError)
+       expect(board_string.strip).to eq board.inspect.strip 
+  end
+
+    it "cannot castle when moving through check" do
+       board = empty_board
+       @board.current_positions[60] = King.new('white')
+       @board.current_positions[56] = Rook.new('white')
+       @board.current_positions[4] = King.new('black')
+       @board.current_positions[11] = Rook.new('black')
+
+       board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+          ♜              7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖           ♔           1
+       BOARD
+
+       move = MovePiece.new(@board, 60, 58)
+       expect{ move.call }.to raise_error(RuntimeError)
+       expect(board_string.strip).to eq board.inspect.strip 
+  end
+
+  it "cannot castle when the king has moved previously" do
+    board = empty_board
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[56] = Rook.new('white')
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[8] = Rook.new('black')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+ ♜                       7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖           ♔           1
+    BOARD
+
+    move e1 e2
+    move e2 e1
+    move = MovePiece.new(@board, 60, 58)
+    expect{ move.call }.to raise_error(RuntimeError)
+    expect(board_string.strip).to eq board.inspect.strip
+  end
+
+  it "cannot castle when the rook has moved previously" do
+    board = empty_board
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[56] = Rook.new('white')
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[8] = Rook.new('black')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+             ♚           8 
+ ♜                       7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♖           ♔           1
+    BOARD
+
+    move a1 a2
+    move a2 a1
+    move = MovePiece.new(@board, 60, 58)
+    expect{ move.call }.to raise_error(RuntimeError)
+    expect(board_string.strip).to eq board.inspect.strip
+  end
 end
