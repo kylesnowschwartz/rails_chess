@@ -225,6 +225,31 @@ RSpec.describe King, type: :concept do
     expect(board_string.strip).to eq board.inspect.strip
   end
 
+  it "reports when a king is mated better" do
+    @board = start_chess
+    move f2 f3
+    move e7 e5
+    move g2 g4
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+ ♜  ♞  ♝     ♚  ♝  ♞  ♜  8 
+ ♟  ♟  ♟  ♟     ♟  ♟  ♟  7 
+                         6 
+             ♟           5 
+                   ♙  ♛  4 
+                ♙        3 
+ ♙  ♙  ♙  ♙  ♙        ♙  2 
+ ♖  ♘  ♗  ♕  ♔  ♗  ♘  ♖  1 
+
+
+    BOARD
+
+    expect(STDOUT).to receive(:puts).with("Checkmate.")
+    move d8 h4
+    expect(board_string.strip).to eq @board.inspect.strip
+  end
+
   it "white king can castle king side" do
     board = empty_board
     @board.current_positions[60] = King.new('white')

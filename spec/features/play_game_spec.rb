@@ -64,10 +64,47 @@
 # move d5 e4
 
 #fool's checkmate
+# start_chess
 # move f2 f3
-# move e4 e5
+# move e7 e5
 # move g2 g4
 # move d8 h4
+
+# a simple game
+# start_chess
+# move e2 e4
+# move a7 a6
+# move d2 d4
+# move h7 h5
+# move g1 f3
+# move h8 h6
+# move c1 h6
+# move g8 h6
+# move f1 c4
+# move b7 b6
+# MovePiece.new(@board, 60, 62).call
+# move f7 f6
+# move b1 c3
+# move g7 g6
+# move f1 e1
+# move f8 g7
+# move d1 d3
+# move c8 b7
+# move a1 d1
+# move d8 c8
+# move e4 e5
+# move c8 d8
+# move d3 g6
+# move e8 f8
+# move e5 f6
+# move g7 f6
+# move g6 h6
+# move f8 e8
+# move h6 g6
+# move e8 f8
+# move g6 f7
+
+
 
 
 

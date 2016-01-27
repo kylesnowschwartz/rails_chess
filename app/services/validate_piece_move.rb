@@ -11,7 +11,7 @@ class ValidatePieceMove
   end
 
   def call
-    !piece_in_question_pinned? && legal_moves.include?(to)
+    !move_leaves_king_in_check? && legal_moves.include?(to)
   end
 
   # private
@@ -20,12 +20,11 @@ class ValidatePieceMove
     instance_variable_get("@#{@piece_name}")
   end
 
-  def piece_in_question_pinned?
+  def move_leaves_king_in_check?
     @duped_board = duplicate_board
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(same_color_king)
-
     opposite_color_pieces_legal_moves.include?(kings_position)
   end
 
@@ -60,13 +59,28 @@ class ValidatePieceMove
   # TODO perhaps the board knows about the black and white pieces?
 
   def opposite_color_king_in_checkmate?
+    return false unless opposite_color_king_in_check?
+    
     @duped_board = duplicate_board
     move_piece_in_duplicated_board
 
-    kings_position = @duped_board.position(opposite_color_king)
+    validated_opposite_color_pieces_legal_moves.empty?
+  end
 
-    same_color_pieces_legal_moves.include?(kings_position) &&
-    opposite_color_pieces_legal_moves.empty?
+  def validated_opposite_color_pieces_legal_moves
+    opposite_color_pieces.map do |opposite_piece|
+      validated_moves_for_piece(opposite_piece)
+    end.flatten
+  end
+
+  def legal_moves_for_piece(piece)
+    "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), nil).legal_moves
+  end
+
+  def validated_moves_for_piece(piece)
+    legal_moves_for_piece(piece).select do |move|
+      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), move).call
+    end
   end
 
   def opposite_color_pieces_legal_moves

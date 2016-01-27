@@ -1,8 +1,10 @@
 class Piece
+  attr_accessor :has_moved
   attr_reader :color
 
   def initialize(color)
     @color = color
+    @has_moved = false
   end
 
   def on_file_a?(position)

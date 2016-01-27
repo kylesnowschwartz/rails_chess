@@ -25,20 +25,20 @@ class ValidateKingMove < ValidatePieceMove
     right_bound_piece = subset_of_pieces_that_bound_king[-1]
 
     if to == queen_side_position
-      original_king_position == from &&
       left_bound_piece.is_a?(Rook) && 
       original_rook_positions[0] == @board.position(left_bound_piece) &&
-      !my_color_king_in_check? &&
-      position == to
+      left_bound_piece.has_moved == false
     elsif to == king_side_position
-      original_king_position == from &&
       right_bound_piece.is_a?(Rook) && 
       original_rook_positions[1] == @board.position(right_bound_piece) &&
-      !my_color_king_in_check? &&
-      position == to
+      right_bound_piece.has_moved == false
     else
       false
-    end
+    end &&
+    piece_in_question.has_moved == false &&
+    original_king_position == from &&
+    !my_color_king_in_check? &&
+    position == to
   end
 
   def original_king_position

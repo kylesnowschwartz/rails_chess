@@ -7,10 +7,6 @@ class King < Piece
   end
 
   def castling_moves
-    if white?
-      [58, 62]
-    else
-      [2, 6]
-    end
+    white? ? [58, 62] : [2, 6]
   end
 end

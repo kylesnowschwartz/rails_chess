@@ -15,6 +15,8 @@ class MovePiece
       report_king_status
       
       place_piece
+
+      set_has_moved_to_true
       
       promote_pawn
     else
@@ -58,6 +60,11 @@ class MovePiece
         board.current_positions[56] = NilPiece.new
       end
     end
+  end
+
+  def set_has_moved_to_true
+    @board.piece(to).has_moved = true
+    @board.piece(from).has_moved = true
   end
     
   def move_valid?
