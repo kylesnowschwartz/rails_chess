@@ -10,6 +10,8 @@ class Queen < Piece
     }
   end
 
+  private
+
   def left_to_right
     Position.new.position_diagonals(@position)[0] || []
   end

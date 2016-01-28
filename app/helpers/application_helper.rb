@@ -38,7 +38,9 @@ module ChessDSL
 
     #TODO instantiate move piece, then call it, then ask it some questions
     # begin
-      MovePiece.new(@board, from, to).call
+    move = MovePiece.new(@board, from, to)
+    move.report_king_status
+    move.call
     # rescue Exception => e
     #   puts e.message
     # end

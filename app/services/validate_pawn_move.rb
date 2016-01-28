@@ -3,7 +3,7 @@ class ValidatePawnMove < ValidatePieceMove
     valid_attacks + valid_moves_forward
   end
 
-  # private
+  private
 
   def valid_attacks
     return [] if @pawn.possible_placements(from)[:attacks].empty?

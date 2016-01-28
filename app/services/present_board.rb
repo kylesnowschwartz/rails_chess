@@ -20,6 +20,8 @@ class PresentBoard
     join_board_with_new_lines
   end
 
+  private
+
   def map_pieces_to_visual_representations
     @board.current_positions.map do |piece| 
       piece.nil_piece? ? "   " : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3)

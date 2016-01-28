@@ -14,7 +14,25 @@ class ValidatePieceMove
     !move_leaves_king_in_check? && potential_moves.include?(to)
   end
 
-  # private
+  def opposite_color_king_in_checkmate?
+    return false unless opposite_color_king_in_check?
+    
+    @duped_board = duplicate_board
+    move_piece_in_duplicated_board
+
+    validated_opposite_color_pieces_potential_moves.empty?
+  end
+
+  def opposite_color_king_in_check?
+    @duped_board = duplicate_board
+    move_piece_in_duplicated_board
+
+    kings_position = @duped_board.position(opposite_color_king)
+
+    same_color_pieces_potential_moves.include?(kings_position)
+  end
+
+  private
 
   def piece_in_question
     instance_variable_get("@#{@piece_name}")
@@ -54,24 +72,6 @@ class ValidatePieceMove
     same_color_pieces.reject { |piece| piece.class == King}
   end
 
-  def opposite_color_king_in_checkmate?
-    return false unless opposite_color_king_in_check?
-    
-    @duped_board = duplicate_board
-    move_piece_in_duplicated_board
-
-    validated_opposite_color_pieces_potential_moves.empty?
-  end
-
-  def opposite_color_king_in_check?
-    @duped_board = duplicate_board
-    move_piece_in_duplicated_board
-
-    kings_position = @duped_board.position(opposite_color_king)
-
-    same_color_pieces_potential_moves.include?(kings_position)
-  end
-
   def opposite_color_king 
     opposite_color_pieces.select { |piece| piece.class == King }[0]
   end
@@ -87,6 +87,8 @@ class ValidatePieceMove
   end
 
   def opposite_color_pieces
+    @duped_board ||= duplicate_board
+    
     @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
   end
 

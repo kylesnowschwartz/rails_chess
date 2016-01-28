@@ -6,7 +6,7 @@ class ValidateQueenMove < ValidatePieceMove
       .uniq
   end
 
-  # private
+  private
 
   def all_diagonal_pieces
     moves         = @queen.possible_placements(from)

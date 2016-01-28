@@ -5,6 +5,8 @@ class CreateBoard
     @board
   end
 
+  private
+
   def set_initial_positions
     populate_pawns
     populate_other_pieces("white")

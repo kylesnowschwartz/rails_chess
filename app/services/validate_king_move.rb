@@ -4,26 +4,23 @@ class ValidateKingMove < ValidatePieceMove
   end
 
   def potential_moves
-    # TODO make this reject the moves into check stuff once
-    potential_standard_moves + potential_castles
+    all_moves = potential_standard_moves + potential_castles
+    
+    all_moves.reject do |position|
+      board.piece(position).same_color?(@king) || moves_into_check?(position)
+    end
   end
 
   private
 
   def potential_standard_moves
-    @king.possible_placements(from)[:moves].reject do |position|
-      board.piece(position).same_color?(@king) || moves_into_check?(position)
-    end
+    @king.possible_placements(from)[:moves]
   end
 
   def potential_castles
-    if can_castle?
-      @king.possible_placements(from)[:castles].reject do |position|
-        board.piece(position).same_color?(@king) || moves_into_check?(position)
-      end
-    else
-      []
-    end
+    return [] unless can_castle?
+
+    @king.possible_placements(from)[:castles]
   end
 
   def can_castle?

@@ -31,6 +31,8 @@ class Pawn < Piece
     }
   end
 
+  private
+
   def one_ahead
     Position.new(@position).one_row_ahead(self.color)
   end

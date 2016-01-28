@@ -12,9 +12,7 @@ class MovePiece
   def call
     raise "You can't move from an empty square" if piece.nil_piece?
 
-    if move_valid?
-      report_king_status
-      
+    if move_valid?      
       place_piece
 
       promote_pawn
@@ -27,8 +25,6 @@ class MovePiece
     board
   end
 
-  # private
-
   def report_king_status
     if opposing_player_in_checkmate?
       puts 'Checkmate.'
@@ -37,6 +33,8 @@ class MovePiece
     else
     end
   end
+
+  private
 
   def place_piece
     board.current_positions[to] = board.current_positions[from]

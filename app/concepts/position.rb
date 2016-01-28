@@ -27,24 +27,6 @@ class Position
     end
   end
 
-  def position_to_coordinate
-    Coordinate.new(position_to_row, 
-                   position_to_column)
-  end
-
-  def coordinate_to_position(coordinate)
-    coordinate = Coordinate.new(coordinate[0], coordinate[1]) if coordinate.is_a?(Array)
-    coordinate.row * Board::WIDTH + coordinate.column
-  end
-
-  def position_to_row
-    position_id / Board::WIDTH
-  end
-
-  def position_to_column
-    position_id % Board::WIDTH
-  end
-
   def rank
     Board.const_get("RANK#{Board::WIDTH - position_to_row}")
   end
@@ -117,11 +99,6 @@ class Position
      .map { |c| coordinate_to_position(c) }
   end
 
-  def valid_coordinate?((row, col))
-    (0...Board::WIDTH).include?(row) &&
-    (0...Board::WIDTH).include?(col)
-  end
-
   def position_diagonals(current_position)
     current_coordinate = Position.new(current_position).position_to_coordinate
     board_coordinates = Board::POSITIONS.flatten.map { |position| Position.new(position).position_to_coordinate }
@@ -130,5 +107,30 @@ class Position
       .select { |coordinate| coordinate.diagonal_to?(current_coordinate) }
       .group_by { |coordinate| coordinate.diagonal_direction(current_coordinate) }
       .map { |_, coordinates| Set.new(coordinates.map(&:to_position) + [current_position]).sort }
+  end
+
+  def coordinate_to_position(coordinate)
+    coordinate = Coordinate.new(coordinate[0], coordinate[1]) if coordinate.is_a?(Array)
+    coordinate.row * Board::WIDTH + coordinate.column
+  end
+  
+  def position_to_coordinate
+    Coordinate.new(position_to_row, 
+                   position_to_column)
+  end
+
+  private
+
+  def position_to_row
+    position_id / Board::WIDTH
+  end
+
+  def position_to_column
+    position_id % Board::WIDTH
+  end
+
+  def valid_coordinate?((row, col))
+    (0...Board::WIDTH).include?(row) &&
+    (0...Board::WIDTH).include?(col)
   end
 end

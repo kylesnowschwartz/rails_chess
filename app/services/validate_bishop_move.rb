@@ -6,7 +6,7 @@ class ValidateBishopMove < ValidatePieceMove
       .uniq
   end
 
-  # private
+  private
 
   def all_diagonal_pieces
     moves         = @bishop.possible_placements(from)

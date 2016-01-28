@@ -156,7 +156,7 @@ RSpec.describe Pawn, type: :concept do
     expect(board_string.strip).to eq board.inspect.strip
   end
 
-  it "can capture enpassant" do
+  xit "can capture enpassant" do
     move b2 b4
     move h7 h5
     move b4 b5

@@ -22,6 +22,8 @@ class King < Piece
     }
   end
 
+  private
+
   def castling_moves
     if white? 
       [WHITE_QUEEN_SIDE_CASTLE_TO, WHITE_KING_SIDE_CASTLE_TO] 

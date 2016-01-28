@@ -6,7 +6,7 @@ class ValidateRookMove < ValidatePieceMove
       .uniq
   end
 
-  # private
+  private
 
   def rank_and_file_pieces
     moves       = @rook.possible_placements(from)
