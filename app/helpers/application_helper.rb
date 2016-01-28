@@ -52,7 +52,7 @@ module ChessDSL
 
     coordinate = [rank_numbers[rank], file_letters[file]]
 
-    Square.coordinate_to_position(coordinate)
+    Position.new.coordinate_to_position(coordinate)
   end
 end   
 

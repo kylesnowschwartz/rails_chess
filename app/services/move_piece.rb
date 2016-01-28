@@ -97,7 +97,7 @@ class MovePiece
   end
 
   def promote_pawn
-    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Square.rank(to))
+    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)
       chosen_piece = request_pawn_promotion_choice
 
       board.current_positions[to] = chosen_piece.constantize.new(piece.color)

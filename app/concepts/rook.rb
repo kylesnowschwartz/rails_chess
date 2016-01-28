@@ -9,10 +9,10 @@ class Rook < Piece
   private
 
   def rank_array(position)
-    Square.rank(position).to_a
+    Position.new(position).rank.to_a
   end
   
   def file_array(position)
-    Square.file(position).to_a
+    Position.new(position).file.to_a
   end
 end

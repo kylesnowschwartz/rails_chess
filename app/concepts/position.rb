@@ -1,8 +1,12 @@
 require 'set'
 
-class Square
-  # TODO make this less bloated, break it up, do SOMETHING
-  # TODO just intialize with a position goddamnit
+class Position
+  attr_reader :position_id
+
+  def initialize(position_id = nil)
+    @position_id = position_id
+  end
+
   Coordinate = Struct.new(:row, :column) do
     def diagonal_to?(coordinate)
       (row - coordinate.row).abs == (column - coordinate.column).abs
@@ -19,58 +23,58 @@ class Square
     end
 
     def to_position
-      Square.coordinate_to_position(self)
+      Position.new.coordinate_to_position(self)
     end
   end
 
-  def self.position_to_coordinate(position)
-    Coordinate.new(position_to_row(position), 
-                   position_to_column(position))
+  def position_to_coordinate
+    Coordinate.new(position_to_row, 
+                   position_to_column)
   end
 
-  def self.coordinate_to_position(coordinate)
+  def coordinate_to_position(coordinate)
     coordinate = Coordinate.new(coordinate[0], coordinate[1]) if coordinate.is_a?(Array)
     coordinate.row * Board::WIDTH + coordinate.column
   end
 
-  def self.position_to_row(position)
-    position / Board::WIDTH
+  def position_to_row
+    position_id / Board::WIDTH
   end
 
-  def self.position_to_column(position)
-    position % Board::WIDTH
+  def position_to_column
+    position_id % Board::WIDTH
   end
 
-  def self.rank(position)
-    Board.const_get("RANK#{Board::WIDTH - position_to_row(position)}")
+  def rank
+    Board.const_get("RANK#{Board::WIDTH - position_to_row}")
   end
 
-  def self.file(position)
+  def file
     column_index_to_file = (0..7).zip('A'..'H').to_h
 
-    Board.const_get("FILE#{column_index_to_file[position_to_column(position)]}")
+    Board.const_get("FILE#{column_index_to_file[position_to_column]}")
   end
 
   # TODO direction multiplier
-  def self.two_rows_ahead(position, piece)
-    piece.white? ? position - 16 : position + 16
+  def two_rows_ahead(color)
+    color == "white" ? position_id - 16 : position_id + 16
   end
 
-  def self.one_row_ahead(position, piece)
-    piece.white? ? position - 8 : position + 8
+  def one_row_ahead(color)
+    color == "white" ? position_id - 8 : position_id + 8
   end
 
-  def self.one_diagonal_forward_left(position, piece)
-    piece.white? ? position - 9 : position + 9
+  def one_diagonal_forward_left(color)
+    color == "white" ? position_id - 9 : position_id + 9
   end
 
-  def self.one_diagonal_forward_right(position, piece)
-    piece.white? ? position - 7 : position + 7
+  def one_diagonal_forward_right(color)
+    color == "white" ? position_id - 7 : position_id + 7
   end
 
-  def self.knight_moves(position)
-    row = position_to_coordinate(position).row
-    col = position_to_coordinate(position).column
+  def knight_moves
+    row = position_to_coordinate.row
+    col = position_to_coordinate.column
     
     [
       [row - 2, col + 1], 
@@ -85,20 +89,20 @@ class Square
      .map { |c| coordinate_to_position(c) }
   end
 
-  def self.positions_within_board(positions)    
-    positions.select { |position| within_board?(position) }
+  def positions_within_board(positions)    
+    positions.select { |position| Position.new(position).within_board? }
   end
 
-  def self.within_board?(position)
-    row = position_to_coordinate(position).row
-    col = position_to_coordinate(position).column
+  def within_board?
+    row = position_to_coordinate.row
+    col = position_to_coordinate.column
 
     row < Board::WIDTH && col < Board::WIDTH
   end
 
-  def self.neighbors(position)
-    row = position_to_coordinate(position).row
-    col = position_to_coordinate(position).column
+  def neighbors
+    row = position_to_coordinate.row
+    col = position_to_coordinate.column
     
     [
       [row    , col - 1], 
@@ -113,14 +117,14 @@ class Square
      .map { |c| coordinate_to_position(c) }
   end
 
-  def self.valid_coordinate?((row, col))
+  def valid_coordinate?((row, col))
     (0...Board::WIDTH).include?(row) &&
     (0...Board::WIDTH).include?(col)
   end
 
-  def self.position_diagonals(current_position)
-    current_coordinate = position_to_coordinate(current_position)
-    board_coordinates = Board::POSITIONS.flatten.map { |position| position_to_coordinate(position) }
+  def position_diagonals(current_position)
+    current_coordinate = Position.new(current_position).position_to_coordinate
+    board_coordinates = Board::POSITIONS.flatten.map { |position| Position.new(position).position_to_coordinate }
 
     board_coordinates
       .select { |coordinate| coordinate.diagonal_to?(current_coordinate) }

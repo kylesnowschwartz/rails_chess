@@ -1,5 +1,5 @@
 class Knight < Piece
   def possible_placements(position)
-    Square.knight_moves(position)
+    Position.new(position).knight_moves
   end
 end

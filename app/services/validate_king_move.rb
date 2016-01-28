@@ -75,7 +75,7 @@ class ValidateKingMove < ValidatePieceMove
   end
 
   def subset_of_pieces_that_bound_king
-    rank = Square.rank(from)
+    rank = Position.new(from).rank
     pieces = pieces_on_rank_or_file(rank)
     enclosed_inclusive_subset(pieces)
   end

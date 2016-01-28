@@ -17,7 +17,7 @@ class King < Piece
 
   def possible_placements(position)
     {
-      moves: Square.neighbors(position),
+      moves: Position.new(position).neighbors,
       castles: castling_moves 
     }
   end

@@ -16,34 +16,34 @@ class Pawn < Piece
     # otherwise the right to capture it en passant is lost.
     
     if white?
-      moves_forward << two_ahead if Square.rank(position) == Board::RANK2
+      moves_forward << two_ahead if Position.new(@position).rank == Board::RANK2
       attacks << attack_right unless on_file_h?(position)
       attacks << attack_left unless on_file_a?(position)
     else
-      moves_forward << two_ahead if Square.rank(position) == Board::RANK7
+      moves_forward << two_ahead if Position.new(@position).rank == Board::RANK7
       attacks << attack_right unless on_file_a?(position)
       attacks << attack_left unless on_file_h?(position)
     end
 
     { 
-      attacks: Square.positions_within_board(attacks),
-      moves_forward: Square.positions_within_board(moves_forward)
+      attacks: Position.new(@position).positions_within_board(attacks),
+      moves_forward: Position.new(@position).positions_within_board(moves_forward)
     }
   end
 
   def one_ahead
-    Square.one_row_ahead(@position, self)
+    Position.new(@position).one_row_ahead(self.color)
   end
 
   def two_ahead
-    Square.two_rows_ahead(@position, self)
+    Position.new(@position).two_rows_ahead(self.color)
   end
 
   def attack_left
-    Square.one_diagonal_forward_left(@position, self)
+    Position.new(@position).one_diagonal_forward_left(self.color)
   end
 
   def attack_right
-    Square.one_diagonal_forward_right(@position, self)
+    Position.new(@position).one_diagonal_forward_right(self.color)
   end
 end

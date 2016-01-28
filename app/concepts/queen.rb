@@ -11,18 +11,18 @@ class Queen < Piece
   end
 
   def left_to_right
-    Square.position_diagonals(@position)[0] || []
+    Position.new.position_diagonals(@position)[0] || []
   end
 
   def right_to_left
-    Square.position_diagonals(@position)[1] || []
+    Position.new.position_diagonals(@position)[1] || []
   end
 
   def rank_array
-    Square.rank(@position).to_a
+    Position.new(@position).rank.to_a
   end
   
   def file_array
-    Square.file(@position).to_a
+    Position.new(@position).file.to_a
   end
 end
