@@ -1,11 +1,11 @@
 class ValidatePieceMove
   attr_reader :board, :to, :from
-
+  # TODO why do I need to pass the piece when I can just get it from the board? coupling?
   def initialize(piece, board, from, to)
-    @to                      = to
-    @from                    = from
-    @board                   = board
-    @piece_name              = piece.class.to_s.downcase
+    @to         = to
+    @from       = from
+    @board      = board
+    @piece_name = piece.class.to_s.downcase
 
     instance_variable_set("@#{@piece_name}", piece)
   end
@@ -111,18 +111,15 @@ class ValidatePieceMove
 
   def enclosed_inclusive_subset(pieces)
     return [] if pieces.empty?
-
-    partitions = partitioned_pieces(pieces)
-    piece_in_question = partitions[:behind_subset].pop
-
     left_bound = []
-    partitions[:behind_subset].reverse_each do |piece|
+    right_bound = []
+
+    partitioned_pieces(pieces)[:behind_subset].reverse_each do |piece|
       left_bound << piece
       break unless piece.nil_piece?
     end
 
-    right_bound = []
-    partitions[:ahead_subset].each do |piece|
+    partitioned_pieces(pieces)[:ahead_subset].each do |piece|
       right_bound << piece
       break unless piece.nil_piece?
     end
@@ -135,7 +132,7 @@ class ValidatePieceMove
 
     partitions = pieces.partition.with_index { |piece, index| index <= starting_position}
 
-    { behind_subset: partitions[0], ahead_subset: partitions[1] }
+    { behind_subset: partitions[0][0..-2], ahead_subset: partitions[1] }
   end
 
   def dummy_validator(piece, move = nil)

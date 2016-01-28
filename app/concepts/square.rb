@@ -48,7 +48,7 @@ class Square
   def self.file(position)
     column_index_to_file = (0..7).zip('A'..'H').to_h
 
-    Board.const_get("FILE" + column_index_to_file[position_to_column(position)])
+    Board.const_get("FILE#{column_index_to_file[position_to_column(position)]}")
   end
 
   # TODO direction multiplier
@@ -85,9 +85,7 @@ class Square
      .map { |c| coordinate_to_position(c) }
   end
 
-  def self.positions_within_board(positions)
-    return [] if positions.empty?
-    
+  def self.positions_within_board(positions)    
     positions.select { |position| within_board?(position) }
   end
 

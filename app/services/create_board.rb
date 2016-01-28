@@ -25,16 +25,9 @@ class CreateBoard
       King.new(color), Bishop.new(color), Knight.new(color), Rook.new(color)
     ]
 
-    case color
-    when "white"
-      Board::RANK1
-        .each { |position| @board.current_positions[position] = other_pieces.shift }
-    when "black"
-      Board::RANK8
-        .each { |position| @board.current_positions[position] = other_pieces.shift }
-    else
-      raise "Sorry, white and black are the only valid options. I know, das racist"
-    end
+    if color == "white" then rank = Board::RANK1 else rank = Board::RANK8 end
+
+    rank.each_with_index { |position, i| @board.current_positions[position] = other_pieces[i] }
   end
 
   def populate_blank_squares
