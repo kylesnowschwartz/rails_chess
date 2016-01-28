@@ -11,7 +11,7 @@ class ValidatePieceMove
   end
 
   def call
-    !move_leaves_king_in_check? && legal_moves.include?(to)
+    !move_leaves_king_in_check? && potential_moves.include?(to)
   end
 
   # private
@@ -25,15 +25,42 @@ class ValidatePieceMove
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(same_color_king)
-    opposite_color_pieces_legal_moves.include?(kings_position)
+    opposite_color_pieces_potential_moves.include?(kings_position)
   end
 
-  def my_color_king_in_check?
+  def same_color_pieces_potential_moves
+    same_color_pieces_without_king.map do |opposite_piece|
+      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).potential_moves
+    end.flatten.uniq
+  end
+
+  def validated_opposite_color_pieces_potential_moves
+    opposite_color_pieces.map do |opposite_piece|
+      validated_moves_for_piece(opposite_piece)
+    end.flatten
+  end
+
+  def validated_moves_for_piece(piece)
+    potential_moves_for_piece(piece).select do |move|
+      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), move).call
+    end
+  end
+
+  def potential_moves_for_piece(piece)
+    "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), nil).potential_moves
+  end
+
+  def same_color_pieces_without_king
+    same_color_pieces.reject { |piece| piece.class == King}
+  end
+
+  def opposite_color_king_in_checkmate?
+    return false unless opposite_color_king_in_check?
+    
     @duped_board = duplicate_board
+    move_piece_in_duplicated_board
 
-    kings_position = @duped_board.position(same_color_king)
-
-    opposite_color_pieces_legal_moves.include?(kings_position)
+    validated_opposite_color_pieces_potential_moves.empty?
   end
 
   def opposite_color_king_in_check?
@@ -42,7 +69,33 @@ class ValidatePieceMove
 
     kings_position = @duped_board.position(opposite_color_king)
 
-    same_color_pieces_legal_moves.include?(kings_position)
+    same_color_pieces_potential_moves.include?(kings_position)
+  end
+
+  def opposite_color_king 
+    opposite_color_pieces.select { |piece| piece.class == King }[0]
+  end
+
+  def pieces_on_rank_or_file(rank_or_file)
+    board.current_positions.values_at(*rank_or_file)
+  end
+
+  def opposite_color_pieces_potential_moves
+    opposite_color_pieces.map do |opposite_piece|
+      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).potential_moves
+    end.flatten.uniq
+  end
+
+  def opposite_color_pieces
+    @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
+  end
+
+  def same_color_king
+    same_color_pieces.select { |piece| piece.class == King }[0]
+  end
+
+  def same_color_pieces
+    @duped_board.current_positions.select { |piece| piece.same_color?(piece_in_question) }
   end
 
   def duplicate_board
@@ -54,73 +107,6 @@ class ValidatePieceMove
   def move_piece_in_duplicated_board
     @duped_board.current_positions[to] = @duped_board.current_positions[from]
     @duped_board.current_positions[from] = NilPiece.new
-  end
-
-  # TODO perhaps the board knows about the black and white pieces?
-
-  def opposite_color_king_in_checkmate?
-    return false unless opposite_color_king_in_check?
-    
-    @duped_board = duplicate_board
-    move_piece_in_duplicated_board
-
-    validated_opposite_color_pieces_legal_moves.empty?
-  end
-
-  def validated_opposite_color_pieces_legal_moves
-    opposite_color_pieces.map do |opposite_piece|
-      validated_moves_for_piece(opposite_piece)
-    end.flatten
-  end
-
-  def legal_moves_for_piece(piece)
-    "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), nil).legal_moves
-  end
-
-  def validated_moves_for_piece(piece)
-    legal_moves_for_piece(piece).select do |move|
-      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), move).call
-    end
-  end
-
-  def opposite_color_pieces_legal_moves
-    opposite_color_pieces.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
-    end.flatten.uniq
-  end
-
-  def same_color_pieces_legal_moves
-    same_color_pieces_without_king.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).legal_moves
-    end.flatten.uniq
-  end
-
-  def opposite_color_pieces
-    @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
-  end
-
-  def same_color_pieces
-    @duped_board.current_positions.select { |piece| piece.same_color?(piece_in_question) }
-  end
-
-  def opposite_color_pieces_without_king
-    opposite_color_pieces.reject { |piece| piece.class == King}
-  end
-
-  def same_color_pieces_without_king
-    same_color_pieces.reject { |piece| piece.class == King}
-  end
-
-  def opposite_color_king 
-    opposite_color_pieces.select { |piece| piece.class == King }[0]
-  end
-
-  def same_color_king
-    same_color_pieces.select { |piece| piece.class == King }[0]
-  end
-
-  def pieces_on_rank_or_file(rank_or_file)
-    board.current_positions.values_at(*rank_or_file)
   end
 
   def enclosed_inclusive_subset(pieces)

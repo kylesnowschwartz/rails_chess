@@ -1,5 +1,5 @@
 class Rook < Piece
-  def potential_moves(position)
+  def possible_placements(position)
     {
       rank_array: rank_array(position),
       file_array: file_array(position)

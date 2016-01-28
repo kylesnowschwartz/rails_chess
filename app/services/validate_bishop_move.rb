@@ -1,5 +1,5 @@
 class ValidateBishopMove < ValidatePieceMove
-  def legal_moves
+  def potential_moves
     all_diagonal_pieces
       .reject { |piece| piece.same_color?(@bishop) }
       .map { |piece| board.position(piece) }
@@ -9,7 +9,7 @@ class ValidateBishopMove < ValidatePieceMove
   # private
 
   def all_diagonal_pieces
-    moves         = @bishop.potential_moves(from)
+    moves         = @bishop.possible_placements(from)
     left_to_right = pieces_on_diagonal(moves[:left_to_right])
     right_to_left = pieces_on_diagonal(moves[:right_to_left])
     

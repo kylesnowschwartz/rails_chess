@@ -1,5 +1,5 @@
 class Knight < Piece
-  def potential_moves(position)
+  def possible_placements(position)
     Square.knight_moves(position)
   end
 end

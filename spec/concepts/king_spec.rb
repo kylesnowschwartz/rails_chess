@@ -9,7 +9,6 @@ RSpec.describe King, type: :concept do
 
   let(:kings_only_board) do 
     @board = empty_board
-
     @board.current_positions[36] = King.new('white')
     @board.current_positions[34] = King.new('black')
     @board
@@ -202,30 +201,6 @@ RSpec.describe King, type: :concept do
   end
 
   it "reports when a king is mated" do
-    board = empty_board
-    board.current_positions[63] = King.new('white')
-    board.current_positions[56] = King.new('black')
-    board.current_positions[6] = Rook.new('black')
-    board.current_positions[8] = Rook.new('black')
-
-    board_string = <<-BOARD
- A  B  C  D  E  F  G  H 
-                   ♜     8 
-                      ♜  7 
-                         6 
-                         5 
-                         4 
-                         3 
-                         2 
- ♚                    ♔  1
-    BOARD
-
-    expect(STDOUT).to receive(:puts).with("Checkmate.")
-    move a7 h7
-    expect(board_string.strip).to eq board.inspect.strip
-  end
-
-  it "reports when a king is mated better" do
     @board = start_chess
     move f2 f3
     move e7 e5
@@ -293,6 +268,50 @@ RSpec.describe King, type: :concept do
     BOARD
 
     MovePiece.new(board, 60, 58).call
+    expect(board_string.strip).to eq board.inspect.strip
+  end
+
+  it "black king can castle king side" do
+    board = empty_board
+    @board.current_positions[4] = King.new('black')
+    @board.current_positions[7] = Rook.new('black')
+    @board.current_positions[60] = King.new('white')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+                ♜  ♚     8 
+                         7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+             ♔           1
+    BOARD
+
+    MovePiece.new(board, 4, 6).call
+    expect(board_string.strip).to eq board.inspect.strip
+  end
+
+  it "black king can castle queen side" do
+    board = empty_board
+    @board.current_positions[60] = King.new('white')
+    @board.current_positions[0] = Rook.new('black')
+    @board.current_positions[4] = King.new('black')
+
+    board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+       ♚  ♜              8 
+                         7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+             ♔           1
+    BOARD
+
+    MovePiece.new(board, 4, 2).call
     expect(board_string.strip).to eq board.inspect.strip
   end
 

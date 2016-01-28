@@ -3,6 +3,9 @@ end
 
 module ChessDSL
   def start_chess
+    ActiveRecord::Base.logger.level = 1 # turn off database logging in console
+    
+    @game = Game.create!
     @board = CreateBoard.new.call
   end
 
@@ -27,7 +30,12 @@ module ChessDSL
   def move((from, to))
     from = translate_rank_file_notation_to_position(from)
     to = translate_rank_file_notation_to_position(to)
-    
+    piece = @board.piece(from)
+
+    if "Validate#{piece.class}Move".constantize.new(piece, @board, from, to).call && @game
+      Move.create!(game: @game, from_square: from, to_square: to)
+    end
+
     #TODO instantiate move piece, then call it, then ask it some questions
     # begin
       MovePiece.new(@board, from, to).call

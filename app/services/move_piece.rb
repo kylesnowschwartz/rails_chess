@@ -16,9 +16,9 @@ class MovePiece
       
       place_piece
 
-      set_has_moved_to_true
-      
       promote_pawn
+
+      set_has_moved_to_true
     else
       raise "Not a legal move for #{piece.class}"
     end
@@ -31,14 +31,10 @@ class MovePiece
   def report_king_status
     if opposing_player_in_checkmate?
       puts 'Checkmate.'
-    elsif checked_opposing_player?
+    elsif opposing_player_in_check?
       puts 'Check.'
     else
     end
-  end
-
-  def castling?
-    @piece.is_a?(King) && @piece.potential_moves(from)[:castles].include?(to)
   end
 
   def place_piece
@@ -46,19 +42,7 @@ class MovePiece
     board.current_positions[from] = NilPiece.new
 
     if castling?
-      king_side_castle_to = 62
-      king_side_castle_rook_from = 63
-      king_side_castle_rook_to = 61
-
-      if to == king_side_castle_to
-        board.current_positions[king_side_castle_rook_to] = board.current_positions[king_side_castle_rook_from]
-        board.current_positions[king_side_castle_rook_from] = NilPiece.new
-      end
-
-      if to == 58
-        board.current_positions[59] = board.current_positions[56]
-        board.current_positions[56] = NilPiece.new
-      end
+      place_castles
     end
   end
 
@@ -71,7 +55,7 @@ class MovePiece
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).call
   end
 
-  def checked_opposing_player?
+  def opposing_player_in_check?
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_check?
   end
 
@@ -79,8 +63,40 @@ class MovePiece
     "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_checkmate?
   end
 
+  def castling?
+    @piece.is_a?(King) && @piece.possible_placements(from)[:castles].include?(to)
+  end
+
+  def place_castles
+    if [King::WHITE_QUEEN_SIDE_CASTLE_TO, King::BLACK_QUEEN_SIDE_CASTLE_TO].include?(to)
+      queen_side_castle
+    else
+      king_side_castle
+    end
+  end
+
+  def queen_side_castle
+    if piece.white?
+      board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_FROM]
+      board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_FROM] = NilPiece.new
+    else
+      board.current_positions[King::BLACK_QUEEN_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::BLACK_QUEEN_SIDE_CASTLE_ROOK_FROM]
+      board.current_positions[King::BLACK_QUEEN_SIDE_CASTLE_ROOK_FROM] = NilPiece.new
+    end
+  end
+
+  def king_side_castle
+    if piece.white?
+      board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_FROM]
+      board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_FROM] = NilPiece.new
+    else
+      board.current_positions[King::BLACK_KING_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::BLACK_KING_SIDE_CASTLE_ROOK_FROM]
+      board.current_positions[King::BLACK_KING_SIDE_CASTLE_ROOK_FROM] = NilPiece.new
+    end
+  end
+
   def promote_pawn
-    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].any? { |rank| rank == Square.rank(to) }
+    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Square.rank(to))
       chosen_piece = request_pawn_promotion_choice
 
       board.current_positions[to] = chosen_piece.constantize.new(piece.color)

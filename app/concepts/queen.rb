@@ -1,5 +1,5 @@
 class Queen < Piece
-  def potential_moves(position)
+  def possible_placements(position)
     @position = position
 
     {

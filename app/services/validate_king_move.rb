@@ -1,23 +1,23 @@
 class ValidateKingMove < ValidatePieceMove
   def call
-    legal_moves.include?(to)
+    potential_moves.include?(to)
   end
 
-  def legal_moves
-    @king.potential_moves(from)[:moves].reject do |position|
+  def potential_moves
+    @king.possible_placements(from)[:moves].reject do |position|
       board.piece(position).same_color?(@king) || moves_into_check?(position)
     end +
-    @king.potential_moves(from)[:castles].select do |position|
+    @king.possible_placements(from)[:castles].select do |position|
       can_castle?(position) && !moves_into_check?(position)
-    end.uniq
+    end
   end
 
   # private
 
   # TODO extract this to a service query
   def can_castle?(position)
-    queen_side_position = @king.potential_moves(from)[:castles][0]
-    king_side_position = @king.potential_moves(from)[:castles][1]
+    queen_side_position = @king.possible_placements(from)[:castles][0]
+    king_side_position = @king.possible_placements(from)[:castles][1]
     rank = Square.rank(from)
     pieces = pieces_on_rank_or_file(rank)
     subset_of_pieces_that_bound_king = enclosed_inclusive_subset(pieces)
@@ -27,15 +27,15 @@ class ValidateKingMove < ValidatePieceMove
     if to == queen_side_position
       left_bound_piece.is_a?(Rook) && 
       original_rook_positions[0] == @board.position(left_bound_piece) &&
-      left_bound_piece.has_moved == false
+      !left_bound_piece.has_moved
     elsif to == king_side_position
       right_bound_piece.is_a?(Rook) && 
       original_rook_positions[1] == @board.position(right_bound_piece) &&
-      right_bound_piece.has_moved == false
+      !right_bound_piece.has_moved
     else
       false
     end &&
-    piece_in_question.has_moved == false &&
+    !piece_in_question.has_moved &&
     original_king_position == from &&
     !my_color_king_in_check? &&
     position == to
@@ -56,6 +56,14 @@ class ValidateKingMove < ValidatePieceMove
     kings_meeting? || opposite_color_pieces_attack_desired_king_move?(position)
   end
 
+  def my_color_king_in_check?
+    @duped_board = duplicate_board
+
+    kings_position = @duped_board.position(same_color_king)
+
+    opposite_color_pieces_potential_moves.include?(kings_position)
+  end
+
   def opposite_color_pieces_attack_desired_king_move?(position)
     opposite_color_pieces_without_king.any? do |opposite_piece|
       "Validate#{opposite_piece.class}Move".constantize.new(
@@ -71,6 +79,10 @@ class ValidateKingMove < ValidatePieceMove
 
   def kings_meeting?
     king_index = @duped_board.current_positions.find_index(opposite_color_king)
-    opposite_color_king.potential_moves(king_index)[:moves].include?(to)
+    opposite_color_king.possible_placements(king_index)[:moves].include?(to)
+  end
+
+  def opposite_color_pieces_without_king
+    opposite_color_pieces.reject { |piece| piece.class == King}
   end
 end

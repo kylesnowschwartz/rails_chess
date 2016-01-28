@@ -3,6 +3,6 @@ class ValidateNilPieceMove < ValidatePieceMove
     true
   end
 
-  def legal_moves
+  def potential_moves
   end
 end

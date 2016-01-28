@@ -1,5 +1,5 @@
 class Pawn < Piece
-  def potential_moves(position)
+  def possible_placements(position)
     @position = position
 
     attacks = []
@@ -15,7 +15,6 @@ class Pawn < Piece
     # after the opposing pawn makes the double-step move; 
     # otherwise the right to capture it en passant is lost.
     
-  # TODO what if there's a piece on the third rank blocking the pawn from moving forward?
     if white?
       moves_forward << two_ahead if Square.rank(position) == Board::RANK2
       attacks << attack_right unless on_file_h?(position)
