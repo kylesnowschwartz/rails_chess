@@ -344,6 +344,7 @@ RSpec.describe King, type: :concept do
     @board.current_positions[60] = King.new('white')
     @board.current_positions[56] = Rook.new('white')
     @board.current_positions[59] = Rook.new('white')
+    @board.piece(59).has_moved = true
     @board.current_positions[4] = King.new('black')
     @board.current_positions[8] = Rook.new('black')
 

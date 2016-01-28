@@ -30,7 +30,12 @@ class ValidatePieceMove
 
   def same_color_pieces_potential_moves
     same_color_pieces_without_king.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).potential_moves
+      "Validate#{opposite_piece.class}Move".constantize.new(
+        opposite_piece, 
+        @duped_board, 
+        @duped_board.position(opposite_piece), 
+        nil
+      ).potential_moves
     end.flatten.uniq
   end
 
@@ -42,12 +47,22 @@ class ValidatePieceMove
 
   def validated_moves_for_piece(piece)
     potential_moves_for_piece(piece).select do |move|
-      "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), move).call
+      "Validate#{piece.class}Move".constantize.new(
+        piece,
+        @duped_board, 
+        @duped_board.position(piece), 
+        move
+      ).call
     end
   end
 
   def potential_moves_for_piece(piece)
-    "Validate#{piece.class}Move".constantize.new(piece, @duped_board, @duped_board.position(piece), nil).potential_moves
+    "Validate#{piece.class}Move".constantize.new(
+      piece, 
+      @duped_board, 
+      @duped_board.position(piece), 
+      nil
+    ).potential_moves
   end
 
   def same_color_pieces_without_king
@@ -82,7 +97,12 @@ class ValidatePieceMove
 
   def opposite_color_pieces_potential_moves
     opposite_color_pieces.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(opposite_piece, @duped_board, @duped_board.position(opposite_piece), nil).potential_moves
+      "Validate#{opposite_piece.class}Move".constantize.new(
+        opposite_piece, 
+        @duped_board, 
+        @duped_board.position(opposite_piece), 
+        nil
+      ).potential_moves
     end.flatten.uniq
   end
 
@@ -112,24 +132,29 @@ class ValidatePieceMove
   def enclosed_inclusive_subset(pieces)
     return [] if pieces.empty?
 
-    starting_position  = pieces.find_index(piece_in_question)
-    partitioned_pieces = pieces.partition.with_index { |piece, index| index <= starting_position}
-    behind_subset      = partitioned_pieces[0]
-    ahead_subset       = partitioned_pieces[1]
-    piece_in_question  = behind_subset.pop
+    partitions = partitioned_pieces(pieces)
+    piece_in_question = partitions[:behind_subset].pop
 
     left_bound = []
-    behind_subset.reverse_each do |piece|
+    partitions[:behind_subset].reverse_each do |piece|
       left_bound << piece
       break unless piece.nil_piece?
     end
 
     right_bound = []
-    ahead_subset.each do |piece|
+    partitions[:ahead_subset].each do |piece|
       right_bound << piece
       break unless piece.nil_piece?
     end
 
     left_bound.reverse + right_bound
+  end
+
+  def partitioned_pieces(pieces)
+    starting_position  = pieces.find_index(piece_in_question)
+
+    partitions = pieces.partition.with_index { |piece, index| index <= starting_position}
+
+    { behind_subset: partitions[0], ahead_subset: partitions[1] }
   end
 end
