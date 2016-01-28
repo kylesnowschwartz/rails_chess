@@ -6,6 +6,7 @@ class MovePiece
     @from  = from
     @to    = to
     @piece = board.piece(from)
+    @validator ||= "Validate#{piece.class}Move".constantize.new(piece, board, from, to)
   end
 
   def call
@@ -52,15 +53,15 @@ class MovePiece
   end
     
   def move_valid?
-    "Validate#{piece.class}Move".constantize.new(piece, board, from, to).call
+    @validator.call
   end
 
   def opposing_player_in_check?
-    "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_check?
+    @validator.opposite_color_king_in_check?
   end
 
   def opposing_player_in_checkmate?
-    "Validate#{piece.class}Move".constantize.new(piece, board, from, to).opposite_color_king_in_checkmate?
+    @validator.opposite_color_king_in_checkmate?
   end
 
   def castling?
@@ -69,13 +70,13 @@ class MovePiece
 
   def place_castles
     if [King::WHITE_QUEEN_SIDE_CASTLE_TO, King::BLACK_QUEEN_SIDE_CASTLE_TO].include?(to)
-      queen_side_castle
+      place_queen_side_castle
     else
-      king_side_castle
+      place_king_side_castle
     end
   end
 
-  def queen_side_castle
+  def place_queen_side_castle
     if piece.white?
       board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_FROM]
       board.current_positions[King::WHITE_QUEEN_SIDE_CASTLE_ROOK_FROM] = NilPiece.new
@@ -85,7 +86,7 @@ class MovePiece
     end
   end
 
-  def king_side_castle
+  def place_king_side_castle
     if piece.white?
       board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_TO] = board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_FROM]
       board.current_positions[King::WHITE_KING_SIDE_CASTLE_ROOK_FROM] = NilPiece.new

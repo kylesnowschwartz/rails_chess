@@ -30,12 +30,7 @@ class ValidatePieceMove
 
   def same_color_pieces_potential_moves
     same_color_pieces_without_king.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(
-        opposite_piece, 
-        @duped_board, 
-        @duped_board.position(opposite_piece), 
-        nil
-      ).potential_moves
+      dummy_validator(opposite_piece).potential_moves
     end.flatten.uniq
   end
 
@@ -47,22 +42,12 @@ class ValidatePieceMove
 
   def validated_moves_for_piece(piece)
     potential_moves_for_piece(piece).select do |move|
-      "Validate#{piece.class}Move".constantize.new(
-        piece,
-        @duped_board, 
-        @duped_board.position(piece), 
-        move
-      ).call
+      dummy_validator(piece, move).call
     end
   end
 
   def potential_moves_for_piece(piece)
-    "Validate#{piece.class}Move".constantize.new(
-      piece, 
-      @duped_board, 
-      @duped_board.position(piece), 
-      nil
-    ).potential_moves
+    dummy_validator(piece).potential_moves
   end
 
   def same_color_pieces_without_king
@@ -97,12 +82,7 @@ class ValidatePieceMove
 
   def opposite_color_pieces_potential_moves
     opposite_color_pieces.map do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(
-        opposite_piece, 
-        @duped_board, 
-        @duped_board.position(opposite_piece), 
-        nil
-      ).potential_moves
+      dummy_validator(opposite_piece).potential_moves
     end.flatten.uniq
   end
 
@@ -156,5 +136,14 @@ class ValidatePieceMove
     partitions = pieces.partition.with_index { |piece, index| index <= starting_position}
 
     { behind_subset: partitions[0], ahead_subset: partitions[1] }
+  end
+
+  def dummy_validator(piece, move = nil)
+    "Validate#{piece.class}Move".constantize.new(
+        piece, 
+        @duped_board, 
+        @duped_board.position(piece), 
+        move
+      )
   end
 end

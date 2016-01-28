@@ -95,14 +95,9 @@ class ValidateKingMove < ValidatePieceMove
     opposite_color_pieces_potential_moves.exclude?(kings_position)
   end
 
-  def opposite_color_pieces_attack_desired_king_move?(position)
+  def opposite_color_pieces_attack_desired_king_move?(move)
     opposite_color_pieces_without_king.any? do |opposite_piece|
-      "Validate#{opposite_piece.class}Move".constantize.new(
-        opposite_piece, 
-        @duped_board, 
-        @duped_board.position(opposite_piece), 
-        position
-      ).call
+      dummy_validator(opposite_piece, move).call
     end
   end
 
