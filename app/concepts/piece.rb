@@ -7,22 +7,6 @@ class Piece
     @has_moved = false
   end
 
-  def on_file_a?(position)
-    Board::FILEA.include?(position)
-  end
-
-  def on_file_h?(position)
-    Board::FILEH.include?(position)
-  end
-
-  def on_rank_1?(position)
-    Board::RANK1.include?(position)
-  end
-
-  def on_rank_8?(position)
-    Board::RANK8.include?(position)
-  end
-
   def white?
     color == 'white'
   end
@@ -43,5 +27,21 @@ class Piece
 
   def nil_piece?
     self.is_a?(NilPiece)
+  end
+
+  def on_file_a?(position)
+    Board::FILEA.include?(position)
+  end
+
+  def on_file_h?(position)
+    Board::FILEH.include?(position)
+  end
+
+  def on_rank_1?(position)
+    Board::RANK1.include?(position)
+  end
+
+  def on_rank_8?(position)
+    Board::RANK8.include?(position)
   end
 end

@@ -37,7 +37,7 @@ class Position
     Board.const_get("FILE#{column_index_to_file[position_to_column]}")
   end
 
-  # TODO direction multiplier
+  # TODO direction multiplier?
   def two_rows_ahead(color)
     color == "white" ? position_id - 16 : position_id + 16
   end
@@ -52,23 +52,6 @@ class Position
 
   def one_diagonal_forward_right(color)
     color == "white" ? position_id - 7 : position_id + 7
-  end
-
-  def knight_moves
-    row = position_to_coordinate.row
-    col = position_to_coordinate.column
-    
-    [
-      [row - 2, col + 1], 
-      [row + 2, col + 1], 
-      [row - 2, col - 1], 
-      [row + 2, col - 1], 
-      [row - 1, col - 2], 
-      [row - 1, col + 2], 
-      [row + 1, col - 2], 
-      [row + 1, col + 2], 
-    ].select { |c| valid_coordinate?(c) }
-     .map { |c| coordinate_to_position(c) }
   end
 
   def positions_within_board(positions)    
@@ -118,8 +101,6 @@ class Position
     Coordinate.new(position_to_row, 
                    position_to_column)
   end
-
-  private
 
   def position_to_row
     position_id / Board::WIDTH

@@ -1,13 +1,18 @@
 class ValidatePieceMove
-  attr_reader :board, :to, :from
-  # TODO why do I need to pass the piece when I can just get it from the board? coupling?
-  def initialize(piece, board, from, to)
-    @to         = to
-    @from       = from
-    @board      = board
-    @piece_name = piece.class.to_s.downcase
+  attr_reader :board, :to, :from, :move
 
-    instance_variable_set("@#{@piece_name}", piece)
+  def initialize(move)
+    @move       = move
+    @to         = move.to
+    @from       = move.from
+    @board      = move.board
+    @piece_name = move.piece.class.to_s.downcase
+
+    instance_variable_set("@#{@piece_name}", move.piece)
+  end
+
+  def self.validator_for(move)
+    "Validate#{move.piece.class}Move".constantize.new(move)
   end
 
   def call
@@ -88,7 +93,7 @@ class ValidatePieceMove
 
   def opposite_color_pieces
     @duped_board ||= duplicate_board
-    
+
     @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
   end
 
@@ -137,12 +142,9 @@ class ValidatePieceMove
     { behind_subset: partitions[0][0..-2], ahead_subset: partitions[1] }
   end
 
-  def dummy_validator(piece, move = nil)
-    "Validate#{piece.class}Move".constantize.new(
-        piece, 
-        @duped_board, 
-        @duped_board.position(piece), 
-        move
-      )
+  def dummy_validator(piece, to = nil)
+    move = Move.new(@duped_board, piece, @duped_board.position(piece), to)
+
+    "Validate#{piece.class}Move".constantize.new(move)
   end
 end

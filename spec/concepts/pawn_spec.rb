@@ -137,7 +137,7 @@ RSpec.describe Pawn, type: :concept do
     move h5 h6
     move h6 h7
 
-    move = MovePiece.new(@board, 15, 7)
+    move = MovePiece.new(Move.new(@board, @board.piece(15), 15, 7))
     allow(move).to receive_messages(gets: 'Queen')
     move.call
 

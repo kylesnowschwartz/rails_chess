@@ -27,22 +27,35 @@ module ChessDSL
     argument
   end
 
+  def whose_turn?
+    game = Game.find(@game.id)
+    num_of_turns = game.turns.count
+
+    if num_of_turns.even?
+      "white"
+    else
+      "black"
+    end
+  end
+
   def move((from, to))
     from = translate_rank_file_notation_to_position(from)
     to = translate_rank_file_notation_to_position(to)
     piece = @board.piece(from)
 
-    if "Validate#{piece.class}Move".constantize.new(piece, @board, from, to).call && @game
-      Move.create!(game: @game, from_square: from, to_square: to)
-    end
+    # if piece.color == whose_turn?
 
-    #TODO instantiate move piece, then call it, then ask it some questions
-    # begin
-    move = MovePiece.new(@board, from, to)
-    move.report_king_status
-    move.call
-    # rescue Exception => e
-    #   puts e.message
+      move = Move.new(@board, piece, from, to)
+
+      if "Validate#{piece.class}Move".constantize.new(move).call && @game
+        Turn.create!(game: @game, from_square: from, to_square: to)
+      end
+
+      move_piece = MovePiece.new(move)
+      move_piece.report_king_status
+      move_piece.call
+    # else
+    #   puts "It's not your turn."
     # end
   end
 

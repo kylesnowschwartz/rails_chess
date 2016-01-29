@@ -1,6 +1,6 @@
 class Pawn < Piece
-  def possible_placements(position)
-    @position = position
+  def possible_placements(position_id)
+    @position_id = position_id
 
     attacks = []
     moves_forward = []
@@ -16,36 +16,36 @@ class Pawn < Piece
     # otherwise the right to capture it en passant is lost.
     
     if white?
-      moves_forward << two_ahead if Position.new(@position).rank == Board::RANK2
-      attacks << attack_right unless on_file_h?(position)
-      attacks << attack_left unless on_file_a?(position)
+      moves_forward << two_ahead if Position.new(@position_id).rank == Board::RANK2
+      attacks << attack_right unless on_file_h?(position_id)
+      attacks << attack_left unless on_file_a?(position_id)
     else
-      moves_forward << two_ahead if Position.new(@position).rank == Board::RANK7
-      attacks << attack_right unless on_file_a?(position)
-      attacks << attack_left unless on_file_h?(position)
+      moves_forward << two_ahead if Position.new(@position_id).rank == Board::RANK7
+      attacks << attack_right unless on_file_a?(position_id)
+      attacks << attack_left unless on_file_h?(position_id)
     end
 
     { 
-      attacks: Position.new(@position).positions_within_board(attacks),
-      moves_forward: Position.new(@position).positions_within_board(moves_forward)
+      attacks: Position.new(@position_id).positions_within_board(attacks),
+      moves_forward: Position.new(@position_id).positions_within_board(moves_forward)
     }
   end
 
   private
 
   def one_ahead
-    Position.new(@position).one_row_ahead(self.color)
+    Position.new(@position_id).one_row_ahead(self.color)
   end
 
   def two_ahead
-    Position.new(@position).two_rows_ahead(self.color)
+    Position.new(@position_id).two_rows_ahead(self.color)
   end
 
   def attack_left
-    Position.new(@position).one_diagonal_forward_left(self.color)
+    Position.new(@position_id).one_diagonal_forward_left(self.color)
   end
 
   def attack_right
-    Position.new(@position).one_diagonal_forward_right(self.color)
+    Position.new(@position_id).one_diagonal_forward_right(self.color)
   end
 end

@@ -1,12 +1,12 @@
 class MovePiece
   attr_reader :board, :piece, :from, :to
 
-  def initialize(board, from, to)
-    @board = board
-    @from  = from
-    @to    = to
-    @piece = board.piece(from)
-    @validator ||= "Validate#{piece.class}Move".constantize.new(piece, board, from, to)
+  def initialize(move)
+    @board     = move.board
+    @from      = move.from
+    @to        = move.to
+    @piece     = move.piece
+    @validator = ValidatePieceMove.validator_for(move)
   end
 
   def call

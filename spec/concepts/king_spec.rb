@@ -244,7 +244,7 @@ RSpec.describe King, type: :concept do
                 ♖  ♔     1
     BOARD
 
-    MovePiece.new(board, 60, 62).call
+    MovePiece.new(Move.new(board, board.piece(60), 60, 62)).call
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -267,7 +267,7 @@ RSpec.describe King, type: :concept do
        ♔  ♖              1
     BOARD
 
-    MovePiece.new(board, 60, 58).call
+    MovePiece.new(Move.new(board, board.piece(60), 60, 58)).call
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -289,7 +289,7 @@ RSpec.describe King, type: :concept do
              ♔           1
     BOARD
 
-    MovePiece.new(board, 4, 6).call
+    MovePiece.new(Move.new(board, board.piece(4), 4, 6)).call
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -311,7 +311,7 @@ RSpec.describe King, type: :concept do
              ♔           1
     BOARD
 
-    MovePiece.new(board, 4, 2).call
+    MovePiece.new(Move.new(board, board.piece(4), 4, 2)).call
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -334,7 +334,7 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    move = MovePiece.new(board, 52, 50)
+    move = MovePiece.new(Move.new(board, board.piece(52), 52, 50))
     expect{ move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
@@ -360,7 +360,7 @@ RSpec.describe King, type: :concept do
  ♖        ♖  ♔           1
     BOARD
 
-    move = MovePiece.new(@board, 60, 58)
+    move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
     expect{ move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
@@ -384,7 +384,7 @@ RSpec.describe King, type: :concept do
  ♖           ♔           1
     BOARD
 
-    move = MovePiece.new(@board, 60, 58)
+    move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
     expect{ move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
@@ -408,7 +408,7 @@ RSpec.describe King, type: :concept do
  ♖           ♔           1
        BOARD
 
-       move = MovePiece.new(@board, 60, 58)
+       move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
        expect{ move.call }.to raise_error(RuntimeError)
        expect(board_string.strip).to eq board.inspect.strip 
   end
@@ -432,7 +432,7 @@ RSpec.describe King, type: :concept do
  ♖           ♔           1
        BOARD
 
-       move = MovePiece.new(@board, 60, 58)
+       move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
        expect{ move.call }.to raise_error(RuntimeError)
        expect(board_string.strip).to eq board.inspect.strip 
   end
@@ -458,7 +458,7 @@ RSpec.describe King, type: :concept do
 
     move e1 e2
     move e2 e1
-    move = MovePiece.new(@board, 60, 58)
+    move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
     expect{ move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
@@ -484,7 +484,7 @@ RSpec.describe King, type: :concept do
 
     move a1 a2
     move a2 a1
-    move = MovePiece.new(@board, 60, 58)
+    move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
     expect{ move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end

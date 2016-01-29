@@ -1,3 +1,3 @@
 class Game < ActiveRecord::Base
-  has_many :moves, dependent: :destroy
+  has_many :turns, dependent: :destroy
 end
