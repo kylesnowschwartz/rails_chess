@@ -93,7 +93,7 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    expect{ move e4 d4 }.to raise_error(RuntimeError)
+    expect { move e4 d4 }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 

@@ -15,6 +15,12 @@ class ValidatePieceMove
     "Validate#{move.piece.class}Move".constantize.new(move)
   end
 
+  def dummy_validator(piece, to = nil)
+    move = Move.new(@duped_board, piece, @duped_board.position(piece), to)
+
+    "Validate#{piece.class}Move".constantize.new(move)
+  end
+
   def call
     !move_leaves_king_in_check? && potential_moves.include?(to)
   end
@@ -138,11 +144,5 @@ class ValidatePieceMove
     partitions = pieces.partition.with_index { |_, index| index <= starting_position }
 
     { behind_subset: partitions[0][0..-2], ahead_subset: partitions[1] }
-  end
-
-  def dummy_validator(piece, to = nil)
-    move = Move.new(@duped_board, piece, @duped_board.position(piece), to)
-
-    "Validate#{piece.class}Move".constantize.new(move)
   end
 end

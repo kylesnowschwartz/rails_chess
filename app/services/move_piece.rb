@@ -55,7 +55,9 @@ class MovePiece
   end
 
   def opposing_player_in_check?
-    @validator.opposite_color_king_in_check?
+    # @validator.opposite_color_king_in_check?
+    verifier = KingInCheckVerifier.new(@board)
+    @piece.white? ? verifier.black_king_in_check? : verifier.white_king_in_check?
   end
 
   def opposing_player_in_checkmate?

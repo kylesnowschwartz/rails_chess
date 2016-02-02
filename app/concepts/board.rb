@@ -23,6 +23,10 @@ class Board
     PresentBoard.new.call(self)
   end
 
+  def pieces
+    current_positions.compact
+  end
+
   def piece(position)
     current_positions[position].piece
   end
