@@ -23,8 +23,8 @@ class PresentBoard
   private
 
   def map_pieces_to_visual_representations
-    @board.current_positions.map do |piece| 
-      piece.nil_piece? ? "   " : PIECES_TO_UNICODE["#{piece.color.to_s} #{piece.class}"].center(3)
+    @board.current_positions.map do |square| 
+      square.piece.nil? ? "   " : PIECES_TO_UNICODE["#{square.piece.color.to_s} #{square.piece.class}"].center(3)
     end.in_groups_of(8)
   end
 

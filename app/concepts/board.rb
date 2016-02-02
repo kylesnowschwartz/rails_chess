@@ -24,11 +24,11 @@ class Board
   end
 
   def piece(position)
-    current_positions[position]
+    current_positions[position].piece
   end
 
-  def position(piece)
-    current_positions.find_index(piece)
+  def position(other_piece)
+    current_positions.find_index { |square| square.piece == other_piece }
   end
 
   def dup

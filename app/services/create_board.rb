@@ -5,7 +5,7 @@ class CreateBoard
     @board
   end
 
-  private
+  # private
 
   def set_initial_positions
     populate_pawns
@@ -15,10 +15,13 @@ class CreateBoard
   end
 
   def populate_pawns
-    Board::RANK2
-      .each { |position| @board.current_positions[position] = Pawn.new(White.new) }
-    Board::RANK7
-      .each { |position| @board.current_positions[position] = Pawn.new(Black.new) }
+    Board::RANK2.each do |position| 
+      @board.current_positions[position] = Square.new(Position.new(position), Pawn.new(White.new))
+    end
+    
+    Board::RANK7.each do |position| 
+      @board.current_positions[position] = Square.new(Position.new(position), Pawn.new(Black.new))
+    end
   end
 
   def populate_other_pieces(color)
@@ -29,14 +32,14 @@ class CreateBoard
 
     if color == White.new then rank = Board::RANK1 else rank = Board::RANK8 end
 
-    rank.each_with_index { |position, i| @board.current_positions[position] = other_pieces[i] }
+    rank.each_with_index { |position, i| @board.current_positions[position] = Square.new(Position.new(position), other_pieces[i]) }
   end
 
   def populate_blank_squares
     initially_blank_ranks = [Board::RANK3, Board::RANK4, Board::RANK5, Board::RANK6]
 
     initially_blank_ranks.each do |rank|
-      rank.each { |position| @board.current_positions[position] = NilPiece.new }
+      rank.each { |position| @board.current_positions[position] = Square.new(Position.new(position)) }
     end
   end
 end

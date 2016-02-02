@@ -95,7 +95,7 @@ class ValidatePieceMove
   def opposite_color_pieces
     @duped_board ||= @board.dup
 
-    @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
+    @duped_board.current_positions.select { |square| square.piece.opposite_color?(piece_in_question) }
   end
 
   def same_color_king
@@ -103,7 +103,9 @@ class ValidatePieceMove
   end
 
   def same_color_pieces
-    @duped_board.current_positions.select { |piece| piece.same_color?(piece_in_question) }
+    #TODO shoving a piece into a square doesn't solve the problem of asking about a
+    #a square's pieces attributes if the piece is just nil
+    @duped_board.current_positions.select { |square| square.piece.same_color?(piece_in_question) }
   end
 
   def move_piece_in_duplicated_board
