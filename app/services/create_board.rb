@@ -9,16 +9,16 @@ class CreateBoard
 
   def set_initial_positions
     populate_pawns
-    populate_other_pieces("white")
-    populate_other_pieces("black")
+    populate_other_pieces(White.new)
+    populate_other_pieces(Black.new)
     populate_blank_squares
   end
 
   def populate_pawns
     Board::RANK2
-      .each { |position| @board.current_positions[position] = Pawn.new("white") }
+      .each { |position| @board.current_positions[position] = Pawn.new(White.new) }
     Board::RANK7
-      .each { |position| @board.current_positions[position] = Pawn.new("black") }
+      .each { |position| @board.current_positions[position] = Pawn.new(Black.new) }
   end
 
   def populate_other_pieces(color)
@@ -27,7 +27,7 @@ class CreateBoard
       King.new(color), Bishop.new(color), Knight.new(color), Rook.new(color)
     ]
 
-    if color == "white" then rank = Board::RANK1 else rank = Board::RANK8 end
+    if color == White.new then rank = Board::RANK1 else rank = Board::RANK8 end
 
     rank.each_with_index { |position, i| @board.current_positions[position] = other_pieces[i] }
   end

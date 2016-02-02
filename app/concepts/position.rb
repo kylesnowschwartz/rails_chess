@@ -1,10 +1,11 @@
 require 'set'
 
 class Position
-  attr_reader :position_id
+  # TODO a position has a piece on it? Is that position empty?
+  attr_reader :cell
 
-  def initialize(position_id = nil)
-    @position_id = position_id
+  def initialize(cell = nil)
+    @cell = cell
   end
 
   Coordinate = Struct.new(:row, :column) do
@@ -39,19 +40,19 @@ class Position
 
   # TODO direction multiplier?
   def two_rows_ahead(color)
-    color == "white" ? position_id - 16 : position_id + 16
+    color.white? ? cell - 16 : cell + 16
   end
 
   def one_row_ahead(color)
-    color == "white" ? position_id - 8 : position_id + 8
+    color.white? ? cell - 8 : cell + 8
   end
 
   def one_diagonal_forward_left(color)
-    color == "white" ? position_id - 9 : position_id + 9
+    color.white? ? cell - 9 : cell + 9
   end
 
   def one_diagonal_forward_right(color)
-    color == "white" ? position_id - 7 : position_id + 7
+    color.white? ? cell - 7 : cell + 7
   end
 
   def positions_within_board(positions)    
@@ -84,7 +85,8 @@ class Position
 
   def position_diagonals(current_position)
     current_coordinate = Position.new(current_position).position_to_coordinate
-    board_coordinates = Board::POSITIONS.flatten.map { |position| Position.new(position).position_to_coordinate }
+    board_coordinates = Board::RANKS.flatten
+      .map { |position| Position.new(position).position_to_coordinate }
 
     board_coordinates
       .select { |coordinate| coordinate.diagonal_to?(current_coordinate) }
@@ -103,11 +105,11 @@ class Position
   end
 
   def position_to_row
-    position_id / Board::WIDTH
+    cell / Board::WIDTH
   end
 
   def position_to_column
-    position_id % Board::WIDTH
+    cell % Board::WIDTH
   end
 
   def valid_coordinate?((row, col))

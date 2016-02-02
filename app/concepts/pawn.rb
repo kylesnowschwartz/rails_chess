@@ -6,15 +6,7 @@ class Pawn < Piece
     moves_forward = []
 
     moves_forward << one_ahead
-  
-  # TODO enpassant
-  # the capturing pawn must be on its fifth rank;
-  # the captured pawn must be on an adjacent file 
-    # and must have just moved two squares in a single move (i.e. a double-step move);
-  # the capture can only be made on the move immediately 
-    # after the opposing pawn makes the double-step move; 
-    # otherwise the right to capture it en passant is lost.
-    
+   
     if white?
       moves_forward << two_ahead if Position.new(@position_id).rank == Board::RANK2
       attacks << attack_right unless on_file_h?(position_id)
@@ -49,3 +41,11 @@ class Pawn < Piece
     Position.new(@position_id).one_diagonal_forward_right(self.color)
   end
 end
+
+# TODO enpassant
+# the capturing pawn must be on its fifth rank;
+# the captured pawn must be on an adjacent file 
+  # and must have just moved two squares in a single move (i.e. a double-step move);
+# the capture can only be made on the move immediately 
+  # after the opposing pawn makes the double-step move; 
+  # otherwise the right to capture it en passant is lost.

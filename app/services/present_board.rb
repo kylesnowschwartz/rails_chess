@@ -24,7 +24,7 @@ class PresentBoard
 
   def map_pieces_to_visual_representations
     @board.current_positions.map do |piece| 
-      piece.nil_piece? ? "   " : PIECES_TO_UNICODE["#{piece.color} #{piece.class}"].center(3)
+      piece.nil_piece? ? "   " : PIECES_TO_UNICODE["#{piece.color.to_s} #{piece.class}"].center(3)
     end.in_groups_of(8)
   end
 

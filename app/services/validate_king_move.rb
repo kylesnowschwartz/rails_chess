@@ -1,7 +1,7 @@
 class ValidateKingMove < ValidatePieceMove
-  def call
-    potential_moves.include?(to)
-  end
+  # def call
+  #   potential_moves.include?(to)
+  # end
 
   def potential_moves
     all_moves = potential_standard_moves + potential_castles
@@ -77,15 +77,17 @@ class ValidateKingMove < ValidatePieceMove
     enclosed_inclusive_subset(pieces)
   end
   
+  # TODO Query is a board in check or checkmate
+
   def moves_into_check?(position)
-    @duped_board = duplicate_board
+    @duped_board = @board.dup
     move_king_in_duplicated_board(position)
 
     kings_meeting? || opposite_color_pieces_attack_desired_king_move?(position)
   end
 
   def not_in_check?
-    @duped_board = duplicate_board
+    @duped_board = @board.dup
 
     kings_position = @duped_board.position(same_color_king)
 
@@ -99,8 +101,11 @@ class ValidateKingMove < ValidatePieceMove
   end
 
   def move_king_in_duplicated_board(position)
+    # TODO THERE IS A BUG HERE something about moving a king to touch
+    # p @move
     @duped_board.current_positions[position] = @duped_board.current_positions[from]
-    @duped_board.current_positions[from] = NilPiece.new
+    # p "king: #{opposite_color_king}"
+    @duped_board.current_positions[from] = NilPiece.new   
   end
 
   def kings_meeting?

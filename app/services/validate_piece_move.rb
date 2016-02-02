@@ -19,17 +19,18 @@ class ValidatePieceMove
     !move_leaves_king_in_check? && potential_moves.include?(to)
   end
 
+  # TODO move these to queries
   def opposite_color_king_in_checkmate?
     return false unless opposite_color_king_in_check?
     
-    @duped_board = duplicate_board
+    @duped_board = @board.dup
     move_piece_in_duplicated_board
 
     validated_opposite_color_pieces_potential_moves.empty?
   end
 
   def opposite_color_king_in_check?
-    @duped_board = duplicate_board
+    @duped_board = @board.dup
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(opposite_color_king)
@@ -44,7 +45,7 @@ class ValidatePieceMove
   end
 
   def move_leaves_king_in_check?
-    @duped_board = duplicate_board
+    @duped_board = @board.dup
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(same_color_king)
@@ -77,7 +78,7 @@ class ValidatePieceMove
     same_color_pieces.reject { |piece| piece.class == King}
   end
 
-  def opposite_color_king 
+  def opposite_color_king
     opposite_color_pieces.select { |piece| piece.class == King }[0]
   end
 
@@ -92,7 +93,7 @@ class ValidatePieceMove
   end
 
   def opposite_color_pieces
-    @duped_board ||= duplicate_board
+    @duped_board ||= @board.dup
 
     @duped_board.current_positions.select { |piece| piece.opposite_color?(piece_in_question) }
   end
@@ -105,12 +106,6 @@ class ValidatePieceMove
     @duped_board.current_positions.select { |piece| piece.same_color?(piece_in_question) }
   end
 
-  def duplicate_board
-    duplicated_board = Board.new 
-    duplicated_board.current_positions = @board.current_positions.map(&:dup)
-    duplicated_board
-  end
-
   def move_piece_in_duplicated_board
     @duped_board.current_positions[to] = @duped_board.current_positions[from]
     @duped_board.current_positions[from] = NilPiece.new
@@ -121,6 +116,7 @@ class ValidatePieceMove
     left_bound = []
     right_bound = []
 
+    # TODO take while - capture the index rather than piece itself
     partitioned_pieces(pieces)[:behind_subset].reverse_each do |piece|
       left_bound << piece
       break unless piece.nil_piece?
@@ -135,9 +131,9 @@ class ValidatePieceMove
   end
 
   def partitioned_pieces(pieces)
-    starting_position  = pieces.find_index(piece_in_question)
+    starting_position = pieces.find_index(piece_in_question)
 
-    partitions = pieces.partition.with_index { |piece, index| index <= starting_position}
+    partitions = pieces.partition.with_index { |_, index| index <= starting_position }
 
     { behind_subset: partitions[0][0..-2], ahead_subset: partitions[1] }
   end

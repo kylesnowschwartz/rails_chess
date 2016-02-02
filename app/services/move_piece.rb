@@ -40,7 +40,7 @@ class MovePiece
     board.current_positions[to] = board.current_positions[from]
     board.current_positions[from] = NilPiece.new
 
-    if castling?
+    if is_castling?
       place_castles
     end
   end
@@ -62,8 +62,10 @@ class MovePiece
     @validator.opposite_color_king_in_checkmate?
   end
 
-  def castling?
-    @piece.is_a?(King) && @piece.possible_placements(from)[:castles].include?(to)
+  def is_castling?
+    @piece.is_a?(King) &&
+    from == @piece.original_position &&
+    @piece.possible_placements(from)[:castles].include?(to)
   end
 
   def place_castles

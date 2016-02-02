@@ -10,8 +10,8 @@ class ValidatePawnMove < ValidatePieceMove
 
     @pawn.possible_placements(from)[:attacks].select do |attack|
       board.piece(attack).present? &&
-        board.piece(attack).opposite_color?(@pawn) &&
-        Position.new.position_diagonals(from).flatten.include?(to)
+      board.piece(attack).opposite_color?(@pawn) &&
+      Position.new.position_diagonals(from).flatten.include?(to)
     end
   end
 

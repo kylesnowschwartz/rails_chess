@@ -2,27 +2,25 @@ class Piece
   attr_accessor :has_moved
   attr_reader :color
 
-  def initialize(color)
+  def initialize(color = Color.new)
     @color = color
     @has_moved = false
   end
 
   def white?
-    color == 'white'
+    color.white?
   end
 
   def black?
-    color == 'black'
+    color.black?
   end
 
   def same_color?(other)
-    return false if nil_piece?
     color == other.color
   end
 
   def opposite_color?(other)
-    return false if nil_piece?
-    !same_color?(other)
+    color.opposite_color == other.color
   end
 
   def nil_piece?

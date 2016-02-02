@@ -3,6 +3,8 @@ class Knight < Piece
     knight_moves(position_id)
   end
 
+  private
+
   def knight_moves(position_id)
     position ||= Position.new(position_id)
     row = position.position_to_coordinate.row

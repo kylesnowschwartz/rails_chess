@@ -2,12 +2,8 @@ module ApplicationHelper
 end
 
 module ChessDSL
-  def start_chess
-    ActiveRecord::Base.logger.level = 1 # turn off database logging in console
-    
-    @game = Game.create!
-    @board = CreateBoard.new.call
-  end
+  FILE_LETTERS = ('a'..'h').to_a.zip((0..7).to_a).to_h
+  RANK_NUMBERS = (1..8).to_a.zip((0..7).to_a.reverse).to_h
 
   def self.set_notation_variables
     ('a'..'h').each do |letter|
@@ -23,6 +19,37 @@ module ChessDSL
 
   set_notation_variables
 
+  def start_chess
+    ActiveRecord::Base.logger.level = 1 # turn off database logging in console
+    
+    @game = Game.create!
+    @board = CreateBoard.new.call
+  end
+
+  def move((from, to))
+    from = translate_rank_file_notation_to_position(from)
+    to = translate_rank_file_notation_to_position(to)
+    piece = @board.piece(from)
+
+    move = Move.new(@board, piece, from, to)
+
+    if ValidatePieceMove.validator_for(move).call && @game
+      @game.turns.create!(from_square: from, to_square: to)
+    end
+
+    move_piece = MovePiece.new(move)
+    move_piece.report_king_status
+    move_piece.call
+  end
+
+  def translate_rank_file_notation_to_position(notation)
+    file, rank = notation.chars[0], notation.chars[1].to_i
+
+    coordinate = [RANK_NUMBERS[rank], FILE_LETTERS[file]]
+
+    Position.new.coordinate_to_position(coordinate)
+  end
+
   def to(argument)
     argument
   end
@@ -36,38 +63,6 @@ module ChessDSL
     else
       "black"
     end
-  end
-
-  def move((from, to))
-    from = translate_rank_file_notation_to_position(from)
-    to = translate_rank_file_notation_to_position(to)
-    piece = @board.piece(from)
-
-    # if piece.color == whose_turn?
-
-      move = Move.new(@board, piece, from, to)
-
-      if "Validate#{piece.class}Move".constantize.new(move).call && @game
-        Turn.create!(game: @game, from_square: from, to_square: to)
-      end
-
-      move_piece = MovePiece.new(move)
-      move_piece.report_king_status
-      move_piece.call
-    # else
-    #   puts "It's not your turn."
-    # end
-  end
-
-  def translate_rank_file_notation_to_position(notation)
-    file_letters = ('a'..'h').to_a.zip((0..7).to_a).to_h
-    rank_numbers = (1..8).to_a.zip((0..7).to_a.reverse).to_h
-
-    file, rank = notation.chars[0], notation.chars[1].to_i
-
-    coordinate = [rank_numbers[rank], file_letters[file]]
-
-    Position.new.coordinate_to_position(coordinate)
   end
 end   
 
