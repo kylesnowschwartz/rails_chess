@@ -1,5 +1,5 @@
 class MovePiece
-  attr_reader :board, :piece, :from, :to
+  attr_reader :board, :piece, :from, :to, :validator
 
   def initialize(move)
     @board     = move.board
@@ -15,12 +15,27 @@ class MovePiece
     if move_valid?      
       place_piece
 
-      promote_pawn
+      if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)
+        promote_pawn
+      end
 
       set_has_moved_to_true
     else
       raise "Not a legal move for #{piece.class}"
     end
+
+    board
+  end
+
+  def skip_validation
+    # TODO What should I call all this stuff?
+    place_piece
+
+    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)
+      promote_pawn
+    end
+
+    set_has_moved_to_true
 
     board
   end
@@ -34,7 +49,7 @@ class MovePiece
     end
   end
 
-  private
+  # private
 
   def place_piece
     board.current_positions[to] = board.current_positions[from]
@@ -55,9 +70,9 @@ class MovePiece
   end
 
   def opposing_player_in_check?
-    # @validator.opposite_color_king_in_check?
-    verifier = KingInCheckVerifier.new(@board)
-    @piece.white? ? verifier.black_king_in_check? : verifier.white_king_in_check?
+    @validator.opposite_color_king_in_check?
+    # verifier = KingInCheckVerifier.new(@board)
+    # @piece.white? ? verifier.black_king_in_check? : verifier.white_king_in_check?
   end
 
   def opposing_player_in_checkmate?
@@ -99,11 +114,11 @@ class MovePiece
   end
 
   def promote_pawn
-    if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)
-      chosen_piece = request_pawn_promotion_choice
+    # TODO for now, let's just choose a queen for pawn promotions
+    # chosen_piece = request_pawn_promotion_choice
+    chosen_piece = "Queen"
 
-      board.current_positions[to] = chosen_piece.constantize.new(piece.color)
-    end
+    board.current_positions[to] = chosen_piece.constantize.new(piece.color)
   end
 
   def request_pawn_promotion_choice

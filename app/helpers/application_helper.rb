@@ -53,17 +53,6 @@ module ChessDSL
   def to(argument)
     argument
   end
-
-  def whose_turn?
-    game = Game.find(@game.id)
-    num_of_turns = game.turns.count
-
-    if num_of_turns.even?
-      "white"
-    else
-      "black"
-    end
-  end
 end   
 
 class Object

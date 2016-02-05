@@ -1,0 +1,15 @@
+<div class='container'>
+  <h1>Chess Games</h1>
+  
+  <% @games.each do |game| %>
+    <li>
+      <%= link_to "Game #{game.id}", game_path(game) %>
+    </li>
+  <% end %>
+
+  <div class='form-container'>
+    <%= form_for :game, url: games_path do |f| %>
+      <%= f.submit "New Game" %>
+    <% end %>
+  </div>
+</div>

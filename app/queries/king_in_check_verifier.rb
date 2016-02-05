@@ -1,10 +1,12 @@
 class KingInCheckVerifier
+  attr_reader :board
+  
   def initialize(board)
     @board = board
   end
 
   def white_king_in_check?
-    black_pieces_potential_moves.include?(black_kings_position
+    black_pieces_potential_moves.include?(black_kings_position)
   end
 
   def black_king_in_check?
@@ -14,22 +16,22 @@ class KingInCheckVerifier
   # private
 
   def white_pieces
-    @board.current_positions.select { |square| square.piece.white? }
+    @board.current_positions.select { |piece| piece.white? }
   end
 
   def black_pieces
-    @board.current_positions.select { |square| square.piece.black? }
+    @board.current_positions.select { |piece| piece.black? }
   end
 
   def black_pieces_potential_moves
     black_pieces.map do |black_piece|
-      dummy_validator(piece).potential_moves
+      dummy_validator(black_piece).potential_moves
     end.flatten
   end
 
   def white_pieces_potential_moves
-    white_pieces.map do |black_piece|
-      dummy_validator(piece).potential_moves
+    white_pieces.map do |white_piece|
+      dummy_validator(white_piece).potential_moves
     end.flatten
   end
 
