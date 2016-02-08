@@ -13,22 +13,14 @@ class MovePiece
     raise "You can't move from an empty square" if piece.nil_piece?
 
     if move_valid?      
-      place_piece
-
-      if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)
-        promote_pawn
-      end
-
-      set_has_moved_to_true
+      after_validation_instructions
     else
       raise "Not a legal move for #{piece.class}"
     end
-
-    board
   end
 
-  def skip_validation
-    # TODO What should I call all this stuff?
+  # TODO terrible name
+  def after_validation_instructions
     place_piece
 
     if piece.is_a?(Pawn) && [Board::RANK1, Board::RANK8].include?(Position.new(to).rank)

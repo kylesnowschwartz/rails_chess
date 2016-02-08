@@ -1,7 +1,6 @@
 require 'set'
 
 class Position
-  # TODO a position has a piece on it? Is that position empty?
   attr_reader :cell
 
   def initialize(cell = nil)

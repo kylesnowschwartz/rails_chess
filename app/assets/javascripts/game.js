@@ -1,6 +1,5 @@
 $( document ).ready(function() {
   var targets = []
-  var gameid = $(".chessboard").attr('class').split(" ")[1]
 
   $( ".chessboard" ).click(function( event ) {
     $(event.target).addClass('selected')
@@ -12,26 +11,27 @@ $( document ).ready(function() {
         targets.length = 0
 
         $(event.target).removeClass('selected')
-      } else{
-          var from = targets[0].attr('id')
-          var to = targets[1].attr('id')
+      } else {
+        var from = targets[0].attr('id')
+        var to = targets[1].attr('id')
 
-          $.ajax({
-             url: "http://localhost:3000/games/" + gameid + "/turns" ,
-             type: "post",
-             data: {"to" : to, "from" : from},
-             success: function(){
-               console.log('Saved Successfully')
-             },
-             error:function(){
-              console.log('Error')
-             }
-           })
+        $.ajax({
+          url: location.href + "/turns",
+          type: "post",
+          data: {"to" : to, "from" : from},
+          success: function(){
+            console.log('Saved Successfully')
+          },
+          error:function(){
+           console.log('Error')
+          }
+        })
+        // TODO - refactor to use promises
 
-          targets = []
+        targets = []
 
-          window.location.reload()
-        }
+        window.location.reload()
       }
+    }
   })
 })

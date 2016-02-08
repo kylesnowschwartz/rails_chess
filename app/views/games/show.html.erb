@@ -1,14 +1,14 @@
 <div class='container'>
-  <div class='chessboard <%= @game.id%>'>
+  <div class='chessboard'>
 
     <% @board.current_positions.in_groups_of(Board::WIDTH).each_with_index do |row, index| %>
       <div class='row'>
         <div class='number'>
           <%= column = (8 - index) %>
         </div>
-        
+
         <% row.each_with_index do |piece, index| %>
-          <% notation = ('a'..'h').to_a[index % Board::WIDTH] + column.to_s %>
+          <% notation = ('a'..'h').to_a[index] + column.to_s %>
 
           <div id='<%= notation %>' class='piece square'>
             <%= PresentBoard::PIECES_TO_UNICODE["#{piece.color.to_s} #{piece.class}"] %>
@@ -25,13 +25,6 @@
   </div>
   
   <%= form_tag controller: :turns, action: :create, game_id: @game do %>
-    <%= label_tag(:from, "From") %>
-    <%= text_field_tag(:from) %>
-
-    <%= label_tag(:to, "To") %>
-    <%= text_field_tag(:to) %>
-
-    <%= submit_tag("Submit Move") %>
   <% end %>
 
   <%= link_to 'Back to Index', games_path %>

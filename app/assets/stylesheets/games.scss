@@ -9,20 +9,20 @@
   margin-top: 15px;
 }
 
-.square:hover {
-  background-color: lightgreen !important;
-}
-
-.selected {
-  background-color: lightgreen !important;
-}
-
 .row:nth-child(odd) .piece:nth-child(even) {
   background: saddlebrown;
 }
 
 .row:nth-child(even) .piece:nth-child(odd) {
   background: saddlebrown;
+}
+
+.row .piece.square:hover {
+  background-color: lightgreen;
+}
+
+.row .piece.square.selected {
+  background-color: lightgreen;
 }
 
 .row {

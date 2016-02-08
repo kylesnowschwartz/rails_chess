@@ -11,7 +11,7 @@ class BuildPosition
       to   = turn.to_square
       from = turn.from_square
       move = Move.new(@board, @board.piece(from), from, to)
-      MovePiece.new(move).skip_validation
+      MovePiece.new(move).after_validation_instructions
     end
 
     @board
