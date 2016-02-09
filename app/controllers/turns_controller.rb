@@ -1,7 +1,7 @@
 class TurnsController < ApplicationController
   def create
     game  = Game.find(params[:game_id])
-    
+
     to    = translate_rank_file_notation_to_position(params[:to])
     from  = translate_rank_file_notation_to_position(params[:from])
     
@@ -12,9 +12,9 @@ class TurnsController < ApplicationController
     move_piece = MovePiece.new(move)
 
     if move_piece.validator.call && whose_turn?(game) == piece.color
-      move_piece.call
-      
       game.turns.create!(to_square: to, from_square: from)
+      
+      AIMove.new(game).call
     end
 
     redirect_to game

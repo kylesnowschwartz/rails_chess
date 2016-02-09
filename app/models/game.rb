@@ -1,7 +1,4 @@
 class Game < ActiveRecord::Base
-  belongs_to :player
   has_many :turns, dependent: :destroy
+  has_many :players, dependent: :destroy
 end
-
-
-# Game.joins(:turns).group("games.id").order("count(turns.id) DESC")
