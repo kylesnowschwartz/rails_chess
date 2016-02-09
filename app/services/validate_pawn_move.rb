@@ -20,7 +20,7 @@ class ValidatePawnMove < ValidatePieceMove
 
     @pawn.possible_placements(from)[:moves_forward].select do |move_forward|
       board.piece(move_forward).nil_piece? &&
-      board.piece(Position.new(from).one_row_ahead(@pawn.color)).nil_piece?
+      board.piece(Position.new(from).n_rows_ahead(1, @pawn.color)).nil_piece?
     end
   end
 end

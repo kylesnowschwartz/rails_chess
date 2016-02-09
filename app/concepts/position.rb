@@ -37,21 +37,18 @@ class Position
     Board.const_get("FILE#{column_index_to_file[position_to_column]}")
   end
 
-  # TODO direction multiplier?
-  def two_rows_ahead(color)
-    color.white? ? cell - 16 : cell + 16
+  def n_rows_ahead(n_rows, color)
+    cell_offset = (n_rows * Board::WIDTH)
+
+    color.white? ? cell - cell_offset : cell + cell_offset
   end
 
-  def one_row_ahead(color)
-    color.white? ? cell - 8 : cell + 8
-  end
+  def n_diagonals_forward(n_rows, color, direction)
+    directional_offset = direction == :right ? -1 : 1
 
-  def one_diagonal_forward_left(color)
-    color.white? ? cell - 9 : cell + 9
-  end
+    cell_offset = n_rows * (Board::WIDTH + directional_offset)
 
-  def one_diagonal_forward_right(color)
-    color.white? ? cell - 7 : cell + 7
+    color.white? ? cell - cell_offset : cell + cell_offset
   end
 
   def positions_within_board(positions)    

@@ -26,19 +26,19 @@ class Pawn < Piece
   private
 
   def one_ahead
-    Position.new(@position_id).one_row_ahead(self.color)
+    Position.new(@position_id).n_rows_ahead(1, self.color)
   end
 
   def two_ahead
-    Position.new(@position_id).two_rows_ahead(self.color)
+    Position.new(@position_id).n_rows_ahead(2, self.color)
   end
 
   def attack_left
-    Position.new(@position_id).one_diagonal_forward_left(self.color)
+    Position.new(@position_id).n_diagonals_forward(1, self.color, :left)
   end
 
   def attack_right
-    Position.new(@position_id).one_diagonal_forward_right(self.color)
+    Position.new(@position_id).n_diagonals_forward(1, self.color, :right)
   end
 end
 
