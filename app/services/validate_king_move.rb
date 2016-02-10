@@ -1,8 +1,4 @@
 class ValidateKingMove < ValidatePieceMove
-  # def call
-  #   potential_moves.include?(to)
-  # end
-
   def potential_moves
     all_moves = potential_standard_moves + potential_castles
     

@@ -13,8 +13,10 @@ class TurnsController < ApplicationController
 
     if move_piece.validator.call && whose_turn?(game) == piece.color
       game.turns.create!(to_square: to, from_square: from)
-      
-      AIMove.new(game).call
+
+      if game.players.last.token == "AI"
+        AIMove.new(game).call
+      end
     end
 
     redirect_to game

@@ -12,7 +12,7 @@ class MovePiece
   def call
     raise "You can't move from an empty square" if piece.nil_piece?
 
-    if move_valid?      
+    if move_valid?
       after_validation_instructions
     else
       raise "Not a legal move for #{piece.class}"

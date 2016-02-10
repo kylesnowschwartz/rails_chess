@@ -3,15 +3,13 @@ class ValidatePawnMove < ValidatePieceMove
     valid_attacks + valid_moves_forward
   end
 
-  private
+  # private
 
   def valid_attacks
     return [] if @pawn.possible_placements(from)[:attacks].empty?
-
     @pawn.possible_placements(from)[:attacks].select do |attack|
       board.piece(attack).present? &&
-      board.piece(attack).opposite_color?(@pawn) &&
-      Position.new.position_diagonals(from).flatten.include?(to)
+      board.piece(attack).opposite_color?(@pawn)
     end
   end
 

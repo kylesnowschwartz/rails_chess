@@ -40,11 +40,11 @@ class ValidatePieceMove
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(opposite_color_king)
-
+    
     same_color_pieces_potential_moves.include?(kings_position)
   end
 
-  private
+  # private
 
   def piece_in_question
     instance_variable_get("@#{@piece_name}")
@@ -55,18 +55,25 @@ class ValidatePieceMove
     move_piece_in_duplicated_board
 
     kings_position = @duped_board.position(same_color_king)
+
     opposite_color_pieces_potential_moves.include?(kings_position)
   end
 
   def same_color_pieces_potential_moves
-    same_color_pieces_without_king.map do |opposite_piece|
-      dummy_validator(opposite_piece).potential_moves
+    same_color_pieces_without_king.map do |same_color_piece|
+      potential_moves_for_piece(same_color_piece)
     end.flatten.uniq
   end
 
   def validated_opposite_color_pieces_potential_moves
     opposite_color_pieces.map do |opposite_piece|
       validated_moves_for_piece(opposite_piece)
+    end.flatten
+  end
+
+  def validated_same_color_pieces_potential_moves
+    same_color_pieces.map do |same_piece|
+      validated_moves_for_piece(same_piece)
     end.flatten
   end
 
@@ -77,7 +84,7 @@ class ValidatePieceMove
   end
 
   def potential_moves_for_piece(piece)
-    dummy_validator(piece).potential_moves
+    dummy_validator(piece, to).potential_moves
   end
 
   def same_color_pieces_without_king
@@ -94,7 +101,7 @@ class ValidatePieceMove
 
   def opposite_color_pieces_potential_moves
     opposite_color_pieces.map do |opposite_piece|
-      dummy_validator(opposite_piece).potential_moves
+      dummy_validator(opposite_piece, to).potential_moves
     end.flatten.uniq
   end
 
@@ -109,6 +116,8 @@ class ValidatePieceMove
   end
 
   def same_color_pieces
+    @duped_board ||= @board.dup
+    
     @duped_board.current_positions.select { |piece| piece.same_color?(piece_in_question) }
   end
 

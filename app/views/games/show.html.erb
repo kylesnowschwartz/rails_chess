@@ -1,33 +1,40 @@
-<div class='container'>
-  <div class='chessboard'>
-
-    <% @board.current_positions.in_groups_of(Board::WIDTH).each_with_index do |row, index| %>
-      <div class='row'>
-        <div class='number'>
-          <%= column = (8 - index) %>
-        </div>
-
-        <% row.each_with_index do |piece, index| %>
-          <% notation = ('a'..'h').to_a[index] + column.to_s %>
-
-          <div id='<%= notation %>' class='piece square'>
-            <%= PresentBoard::PIECES_TO_UNICODE["#{piece.color.to_s} #{piece.class}"] %>
-          </div>
-        <% end %>
-      </div>
+<% if @game.players.last.token.nil? %>
+  <div class='invite'>
+    Would You Like to Play against the AI?
+    <%= form_for(:players, method: "patch", url: game_player_path(token: "AI", id: @game.players.last.id, game_id: @game.id)) do |f| %>
+      <%= f.submit "Play Against an AI" %>
     <% end %>
   </div>
+<% else %>
+  <div class='container'>
+    <div class='chessboard'>
 
-  <div class='letter-row'>
-    <% ('A'..'H').to_a.each do |letter| %>
-        <div class='letter'><%=  letter %></div>
-    <% end %>  
+      <% @board.current_positions.in_groups_of(Board::WIDTH).each_with_index do |row, index| %>
+        <div class='row'>
+          <div class='number'>
+            <%= column = (8 - index) %>
+          </div>
+
+          <% row.each_with_index do |piece, index| %>
+            <% notation = ('a'..'h').to_a[index] + column.to_s %>
+
+            <div id='<%= notation %>' class='piece square'>
+              <%= PresentBoard::PIECES_TO_UNICODE["#{piece.color.to_s} #{piece.class}"] %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class='letter-row'>
+      <% ('A'..'H').to_a.each do |letter| %>
+          <div class='letter'><%=  letter %></div>
+      <% end %>  
+    </div>
+    
+    <%= form_tag controller: :turns, action: :create, game_id: @game do %>
+    <% end %>
+
+    <%= link_to 'Back to Index', games_path %>
   </div>
-  
-  <%= form_tag controller: :turns, action: :create, game_id: @game do %>
-  <% end %>
-
-  <%= link_to 'Back to Index', games_path %>
-</div>
-
-
+<% end %>

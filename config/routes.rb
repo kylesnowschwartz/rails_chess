@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   resources :games, except: [:update, :edit, :delete] do
     resources :turns, only: :create
+    resources :players, only: :update
   end
 end

@@ -8,7 +8,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create!
+    @game = CreateGame.new.call
 
     redirect_to @game
   end

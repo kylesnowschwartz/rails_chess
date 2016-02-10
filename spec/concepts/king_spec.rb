@@ -53,7 +53,7 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    expect{ move e4 e5 }.to raise_error(RuntimeError)
+    expect { move e4 e5 }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -113,7 +113,7 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    expect{ move e4 f4 }.to raise_error(RuntimeError)
+    expect { move e4 f4 }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -134,7 +134,7 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    expect{ move e5 f5 }.to raise_error(RuntimeError)
+    expect { move e5 f5 }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -155,8 +155,8 @@ RSpec.describe King, type: :concept do
                          1
     BOARD
 
-    expect{ move e4 e5 }.to raise_error(RuntimeError)
-    expect{ move h8 f8 }.to raise_error(RuntimeError)
+    expect { move e4 e5 }.to raise_error(RuntimeError)
+    expect { move h8 f8 }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
    end
 
@@ -202,6 +202,54 @@ RSpec.describe King, type: :concept do
     expect(STDOUT).to receive(:puts).with("Check.")
     move a7 h7
     expect(board_string.strip).to eq board.inspect.strip
+  end
+
+  it "reports when a king is checked with a pawn" do
+     board = empty_board
+     board.current_positions[56] = King.new(white)
+     board.current_positions[7] = King.new(black)
+     board.current_positions[22] = Pawn.new(white)
+     board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+                      ♚  8 
+                   ♙     7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♔                       1
+     BOARD
+
+     expect(STDOUT).to receive(:puts).with("Check.")
+     move g6 g7
+     expect(board_string.strip).to eq board.inspect.strip
+  end
+
+  it "cannot move another piece when king is checked with a pawn" do
+     board = empty_board
+     board.current_positions[7] = King.new(black)
+     board.current_positions[1] = Rook.new(black)
+     board.current_positions[56] = King.new(white)
+     board.current_positions[22] = Pawn.new(white)
+
+     board_string = <<-BOARD
+ A  B  C  D  E  F  G  H 
+    ♜                 ♚  8 
+                   ♙     7 
+                         6 
+                         5 
+                         4 
+                         3 
+                         2 
+ ♔                       1
+     BOARD
+
+     expect(STDOUT).to receive(:puts).with("Check.")
+     move g6 g7
+
+     expect { move b8 c8 }.to raise_error(RuntimeError)
+     expect(board_string.strip).to eq board.inspect.strip
   end
 
   it "reports when a king is mated" do
@@ -339,7 +387,7 @@ RSpec.describe King, type: :concept do
     BOARD
 
     move = MovePiece.new(Move.new(board, board.piece(52), 52, 50))
-    expect{ move.call }.to raise_error(RuntimeError)
+    expect { move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
 
@@ -365,7 +413,7 @@ RSpec.describe King, type: :concept do
     BOARD
 
     move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-    expect{ move.call }.to raise_error(RuntimeError)
+    expect { move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
 
@@ -389,7 +437,7 @@ RSpec.describe King, type: :concept do
     BOARD
 
     move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-    expect{ move.call }.to raise_error(RuntimeError)
+    expect { move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip 
   end
 
@@ -413,7 +461,7 @@ RSpec.describe King, type: :concept do
        BOARD
 
        move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-       expect{ move.call }.to raise_error(RuntimeError)
+       expect { move.call }.to raise_error(RuntimeError)
        expect(board_string.strip).to eq board.inspect.strip 
   end
 
@@ -437,7 +485,7 @@ RSpec.describe King, type: :concept do
        BOARD
 
        move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-       expect{ move.call }.to raise_error(RuntimeError)
+       expect { move.call }.to raise_error(RuntimeError)
        expect(board_string.strip).to eq board.inspect.strip 
   end
 
@@ -463,7 +511,7 @@ RSpec.describe King, type: :concept do
     move e1 e2
     move e2 e1
     move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-    expect{ move.call }.to raise_error(RuntimeError)
+    expect { move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 
@@ -489,7 +537,7 @@ RSpec.describe King, type: :concept do
     move a1 a2
     move a2 a1
     move = MovePiece.new(Move.new(@board, board.piece(60),  60, 58))
-    expect{ move.call }.to raise_error(RuntimeError)
+    expect { move.call }.to raise_error(RuntimeError)
     expect(board_string.strip).to eq board.inspect.strip
   end
 end
