@@ -21,6 +21,9 @@ $(document).ready(function() {
           type: "post",
           data: {"to" : to, "from" : from},
           success: function() {
+            // TODO - FLIM FLAM dileberately incorrect
+            // $('.board').html( $(htmlResponse.html) )
+            window.location.reload()
             console.log('Saved Successfully')
           },
           error:function() {
@@ -28,10 +31,9 @@ $(document).ready(function() {
           }
         });
         // TODO - refactor to use promises
-
+        // TODO - instead look for a hidden FORM
         selected_squares = []
 
-        window.location.reload()
       };
     };
   });
@@ -52,7 +54,7 @@ $(document).ready(function() {
     })();
   }
 
-  if ($(".chessboard").length !== 0) {
+  if ($(".chessboard.human").length !== 0) {
     poll(
       function() {
         jQuery.ajax({

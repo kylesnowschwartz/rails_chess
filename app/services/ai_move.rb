@@ -1,22 +1,25 @@
 class AIMove
-  attr_reader :game, :board, :random_piece, :move, :validator
+  attr_reader :game, :board, :random_piece, :move, :validator, :errors
 
   def initialize(game)
     @game = game
-    @board = BuildPosition.new(game.turns).call     
+    @board = BuildPosition.new(game.turns).call    
+    @errors = [] 
   end
 
   def call
     black_potential_moves = pieces_potential_moves(black_pieces)
   
-    p random = pieces_validated_moves(black_potential_moves).sample
+    random = pieces_validated_moves(black_potential_moves).sample
     random_move = random[:moves].select { |move| @board.position(move).present? }.sample || random[:moves].sample
 
     if random
       @game.turns.create!(to_square: random_move, from_square: @board.position(random[:piece]))
     else
-      p "!!!! CHECKMATE !!!!"
+      errors << "!!!! CHECKMATE !!!!"
     end
+
+    errors.none?
   end
 
   def black_pieces

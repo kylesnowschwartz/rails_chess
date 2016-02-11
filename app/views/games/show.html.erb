@@ -1,8 +1,8 @@
 <div class='container'>
   <% if @game.players.last.token.nil? %>
-    <div class='invite'>
+    <div class='opponent-choice'>
       <h2> Against whom would you like to play? </h2>
-
+      
       <%= form_for(:players, method: "patch", url: game_player_path(token: "AI", id: @game.players.last.id, game_id: @game.id)) do |f| %>
         <%= f.submit "Play Against an AI" %>
       <% end %>
@@ -12,7 +12,13 @@
       <% end %>
     </div>
   <% else %>
-    <div class='chessboard' data-turn-count=<%= @game.turns.count %>>
+    <% if @game.players.last.token == "AI" %>
+      <% opponent_class = "AI" %>
+    <% else %>
+      <% opponent_class = "human" %>
+    <% end %>
+
+    <div class='chessboard <%= opponent_class %>' data-turn-count=<%= @game.turns.count %>>
 
       <% @board.current_positions.in_groups_of(Board::WIDTH).each_with_index do |row, index| %>
         <div class='row'>

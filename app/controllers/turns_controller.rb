@@ -2,8 +2,8 @@ class TurnsController < ApplicationController
   def create
     game  = Game.find(params[:game_id])
 
-    to    = translate_rank_file_notation_to_position(params[:to])
-    from  = translate_rank_file_notation_to_position(params[:from])
+    to    = chess_notation_to_position(params[:to])
+    from  = chess_notation_to_position(params[:from])
     
     board = BuildPosition.new(game.turns).call
     piece = board.piece(from)
@@ -16,6 +16,10 @@ class TurnsController < ApplicationController
 
       if game.players.last.token == "AI"
         AIMove.new(game).call
+
+        flash[:time] = Time.now.to_s
+        # p flash.inspect
+        # p Time.now.to_s
       end
     end
 

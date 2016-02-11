@@ -27,8 +27,8 @@ module ChessDSL
   end
 
   def move((from, to))
-    from = translate_rank_file_notation_to_position(from)
-    to = translate_rank_file_notation_to_position(to)
+    from = chess_notation_to_position(from)
+    to = chess_notation_to_position(to)
     piece = @board.piece(from)
 
     move = Move.new(@board, piece, from, to)
@@ -42,7 +42,7 @@ module ChessDSL
     move_piece.call
   end
 
-  def translate_rank_file_notation_to_position(notation)
+  def chess_notation_to_position(notation)
     file, rank = notation.chars[0], notation.chars[1].to_i
 
     coordinate = [RANK_NUMBERS[rank], FILE_LETTERS[file]]

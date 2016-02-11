@@ -19,5 +19,9 @@ class GamesController < ApplicationController
     turns = @game.turns
 
     p @board = BuildPosition.new(turns).call
+
+    p "#" * 1000
+    p flash[:time]
+    @time = flash[:time]
   end
 end
